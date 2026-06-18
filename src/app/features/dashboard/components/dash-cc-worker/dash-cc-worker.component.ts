@@ -2,24 +2,25 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IconComponent } from '../../../../shared/components/icon/icon.component';
 import { Role } from '../../../../core/services/roles.service';
+import { BiComponent } from '../../../../shared/components/bi/bi.component';
 
 @Component({
   selector: 'app-dash-cc-worker',
   standalone: true,
-  imports: [CommonModule, IconComponent],
+  imports: [CommonModule, IconComponent, BiComponent],
   template: `
     <div class="card bold mb-16" style="background: var(--leaf); color: white; border: none;">
       <div class="card-body row" style="padding: 24px; gap: 24px; align-items: center;">
         <div class="avatar" style="width: 48px; height: 48px; font-size: 16px; background: white; color: var(--leaf);">{{ role?.avatar }}</div>
         <div style="flex: 1;">
-          <div style="font-size: 11px; color: rgba(255,255,255,0.7); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700;">Good morning</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.7); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700;"><app-bi k="good_morning"></app-bi></div>
           <div style="font-size: 22px; font-weight: 800; margin-top: 2px;">{{ role?.name }}</div>
           <div style="font-size: 13px; color: rgba(255,255,255,0.8); margin-top: 2px;">{{ role?.scope }}</div>
         </div>
         <div class="grid g-3" style="gap: 24px;">
-          <div><div style="font-size: 10px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;">Today intake</div><div class="mono" style="font-size: 26px; font-weight: 800;">2,584<span style="font-size: 13px; opacity: 0.8;"> kg</span></div></div>
-          <div><div style="font-size: 10px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;">Batches done</div><div class="mono" style="font-size: 26px; font-weight: 800;">36<span style="font-size: 13px; opacity: 0.8;">/42</span></div></div>
-          <div><div style="font-size: 10px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;">Retests due</div><div class="mono" style="font-size: 26px; font-weight: 800;">5</div></div>
+          <div><div style="font-size: 10px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;"><app-bi k="today_intake"></app-bi></div><div class="mono" style="font-size: 26px; font-weight: 800;">2,584<span style="font-size: 13px; opacity: 0.8;"> <app-bi k="kg"></app-bi></span></div></div>
+          <div><div style="font-size: 10px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;"><app-bi k="cc_dash_batches_done"></app-bi></div><div class="mono" style="font-size: 26px; font-weight: 800;">36<span style="font-size: 13px; opacity: 0.8;">/42</span></div></div>
+          <div><div style="font-size: 10px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;"><app-bi k="cc_dash_retests_due"></app-bi></div><div class="mono" style="font-size: 26px; font-weight: 800;">5</div></div>
         </div>
       </div>
     </div>
@@ -32,8 +33,8 @@ import { Role } from '../../../../core/services/roles.service';
               <app-icon [name]="a.i" [size]="22"></app-icon>
             </div>
             <div>
-              <div style="font-weight: 700; font-size: 14px;">{{ a.l }}</div>
-              <div class="muted" style="font-size: 11px;">{{ a.s }}</div>
+              <div style="font-weight: 700; font-size: 14px;"><app-bi [k]="a.l"></app-bi></div>
+              <div class="muted" style="font-size: 11px;"><app-bi [k]="a.s"></app-bi></div>
             </div>
             <app-icon name="ChevronR" [size]="16" style="margin-left: auto; color: var(--ink-3);"></app-icon>
           </div>
@@ -43,10 +44,10 @@ import { Role } from '../../../../core/services/roles.service';
 
     <div class="grid mb-16" style="grid-template-columns: 1.4fr 1fr; gap: 16px;">
       <div class="card bold">
-        <div class="card-head"><div class="ttl">Last 8 intakes · awaiting tag</div></div>
+        <div class="card-head"><div class="ttl"><app-bi k="cc_dash_last_8_intakes"></app-bi></div></div>
         <table class="tbl dense">
           <thead>
-            <tr><th>Time</th><th>Batch</th><th>Block</th><th>Tapper</th><th class="num">Net kg</th><th class="num">DRC %</th><th>Status</th></tr>
+            <tr><th><app-bi k="time"></app-bi></th><th><app-bi k="batch"></app-bi></th><th><app-bi k="block"></app-bi></th><th><app-bi k="tapper"></app-bi></th><th class="num"><app-bi k="net_kg"></app-bi></th><th class="num"><app-bi k="drc_pct"></app-bi></th><th><app-bi k="status"></app-bi></th></tr>
           </thead>
           <tbody>
             @for (r of recentIntakes; track r.b) {
@@ -65,7 +66,7 @@ import { Role } from '../../../../core/services/roles.service';
       </div>
 
       <div class="card bold">
-        <div class="card-head"><div class="ttl">CC stock at hand</div></div>
+        <div class="card-head"><div class="ttl"><app-bi k="cc_dash_cc_stock_at_hand"></app-bi></div></div>
         <div class="card-body col" style="gap: 10px; font-size: 12px;">
           @for (r of stock; track r.l) {
             <div>
@@ -73,7 +74,7 @@ import { Role } from '../../../../core/services/roles.service';
               <div class="bar"><i [style.width.%]="r.p" [style.background]="'var(--' + r.c + ')'"></i></div>
             </div>
           }
-          <a href="#inventory" class="btn ghost sm mt-8" style="justify-content: center;">Full inventory →</a>
+          <a href="#inventory" class="btn ghost sm mt-8" style="justify-content: center;"><app-bi k="cc_dash_full_inventory"></app-bi></a>
         </div>
       </div>
     </div>
@@ -83,10 +84,10 @@ export class DashCcWorkerComponent {
   @Input({ required: true }) role!: Role | undefined;
 
   quickActions = [
-    {l:'New intake', s:'Weigh + DRC sample', i:'Plus',   r:'collection', color:'leaf'},
-    {l:'Open intake queue', s:'6 batches awaiting', i:'Truck', r:'collection', color:'clay'},
-    {l:'Issue ammonia', s:'2 blocks requested',    i:'Boxes', r:'inventory', color:'amber'},
-    {l:'My muster', s:'Mark present 07:00',         i:'Clock', r:'attendance', color:'leaf'},
+    {l:'new_intake', s:'cc_dash_weigh_drc_sample', i:'Plus',   r:'collection', color:'leaf'},
+    {l:'cc_dash_open_intake_queue', s:'cc_dash_batches_awaiting', i:'Truck', r:'collection', color:'clay'},
+    {l:'issue_ammonia', s:'cc_dash_blocks_requested',    i:'Boxes', r:'inventory', color:'amber'},
+    {l:'cc_dash_my_muster', s:'cc_dash_mark_present',         i:'Clock', r:'attendance', color:'leaf'},
   ];
 
   recentIntakes = [

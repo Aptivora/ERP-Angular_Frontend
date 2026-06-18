@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { SparklineComponent } from '../../../../shared/components/charts/sparkline.component';
 import { IconComponent } from '../../../../shared/components/icon/icon.component';
 import { DataService } from '../../../../core/services/data.service';
+import { BiComponent } from '../../../../shared/components/bi/bi.component';
 
 @Component({
   selector: 'app-dash-c',
   standalone: true,
-  imports: [CommonModule, SparklineComponent, IconComponent],
+  imports: [CommonModule, SparklineComponent, IconComponent, BiComponent],
   template: `
     <div class="grid g-6 mb-16">
       @for (k of kpis; track k.l) {
@@ -26,11 +27,11 @@ import { DataService } from '../../../../core/services/data.service';
 
     <div class="grid g-2 mb-16">
       <div class="card bold">
-        <div class="card-head"><div class="ttl">Estate-wise performance · MTD</div></div>
+        <div class="card-head"><div class="ttl"><app-bi k="estate_perf"></app-bi></div></div>
         <table class="tbl">
           <thead>
             <tr>
-              <th>Estate</th><th class="num">Plan kg</th><th class="num">Actual</th><th class="num">Δ%</th><th>Trend</th><th class="num">Wage/kg</th>
+              <th><app-bi k="estate"></app-bi></th><th class="num"><app-bi k="plan_kg"></app-bi></th><th class="num"><app-bi k="actual"></app-bi></th><th class="num"><app-bi k="delta_pct"></app-bi></th><th><app-bi k="trend"></app-bi></th><th class="num"><app-bi k="wage_kg"></app-bi></th>
             </tr>
           </thead>
           <tbody>
@@ -59,7 +60,7 @@ import { DataService } from '../../../../core/services/data.service';
       </div>
 
       <div class="card bold">
-        <div class="card-head"><div class="ttl">Strategic alerts</div></div>
+        <div class="card-head"><div class="ttl"><app-bi k="strategic_alerts"></app-bi></div></div>
         <div class="card-body col" style="gap: 10px;">
           <div style="padding: 12px; border: 1.5px solid var(--oxide); border-radius: 6px; background: var(--oxide-soft);">
             <div class="row gap-8" style="font-weight: 700;"><app-icon name="Alert" [size]="14"></app-icon>Kallar Estate · 3-month decline</div>

@@ -4,13 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { DataService, Worker } from '../../core/services/data.service';
 import { PageHeadComponent } from '../../shared/components/page-head/page-head.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
+import { PdfExportService } from '../../core/services/pdf-export.service';
+import { BiComponent } from '../../shared/components/bi/bi.component';
 
 @Component({
   selector: 'app-attendance',
   standalone: true,
-  imports: [CommonModule, FormsModule, PageHeadComponent, IconComponent],
+  imports: [CommonModule, FormsModule, PageHeadComponent, IconComponent, BiComponent],
   template: `
-    <div class="page">
+    <div class="page" id="attendance-export-content">
       <style>
         @keyframes spin {
           0% { transform: rotate(0deg); }
@@ -26,13 +28,16 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
       </style>
       <app-page-head
         title="Attendance & Muster"
-        ml="ഹാജർ · മസ്റ്റർ ചിറ്റ്"
-        sub="Block-wise daily attendance · Muster Sheet No. 9201"
+        ml="ഹാജർ · മാസ്റ്റർ റോൾ"
+        [sub]="''"
       >
+        <ng-container content>
+          <div class="muted mt-4" style="font-size: 13px;"><app-bi k="att_sub"></app-bi></div>
+        </ng-container>
         <ng-container actions>
-          <button class="btn ghost sm" (click)="onSyncClick()"><app-icon name="Fingerprint" [size]="13"></app-icon>Biometric sync</button>
-          <button class="btn ghost sm" (click)="onExportClick()"><app-icon name="Download" [size]="13"></app-icon>Export PDF</button>
-          <button class="btn primary sm" (click)="onCloseClick()"><app-icon name="Check" [size]="13"></app-icon>Close muster</button>
+          <button class="btn ghost sm" (click)="onSyncClick()"><app-icon name="Fingerprint" [size]="13"></app-icon><app-bi k="bio_sync"></app-bi></button>
+          <button class="btn ghost sm" (click)="downloadPdf('attendance_report')"><app-icon name="Download" [size]="13"></app-icon><app-bi k="export_pdf"></app-bi></button>
+          <button class="btn primary sm" (click)="onCloseClick()"><app-icon name="Check" [size]="13"></app-icon><app-bi k="close_muster"></app-bi></button>
         </ng-container>
       </app-page-head>
 
@@ -69,9 +74,9 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
       <div class="grid mb-16" style="grid-template-columns: 1fr 320px;">
         <div class="card bold">
           <div class="card-head">
-            <div class="ttl">Muster Roll · Block KLP-B07 Kallarkutty</div>
+            <div class="ttl"><app-bi k="muster_roll"></app-bi> · Block KLP-B07 Kallarkutty</div>
             <div class="row gap-8" style="margin-left: auto; font-size: 11px;">
-              <span class="muted">Field Supervisor: <b>Reena Vijayan</b></span>
+              <span class="muted"><app-bi k="field_supervisor"></app-bi>: <b>Reena Vijayan</b></span>
               <span class="badge clay">D1 cycle</span>
             </div>
           </div>
@@ -79,14 +84,14 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
             <thead>
               <tr>
                 <th style="width: 32px;">#</th>
-                <th>Worker</th>
-                <th>Cat.</th>
-                <th>Status</th>
-                <th>In</th>
-                <th>Out</th>
-                <th class="num">Hours</th>
-                <th>Task</th>
-                <th>Remarks</th>
+                <th><app-bi k="worker"></app-bi></th>
+                <th><app-bi k="cat"></app-bi></th>
+                <th><app-bi k="status_att"></app-bi></th>
+                <th><app-bi k="in_time"></app-bi></th>
+                <th><app-bi k="out_time"></app-bi></th>
+                <th class="num"><app-bi k="hours"></app-bi></th>
+                <th><app-bi k="task"></app-bi></th>
+                <th><app-bi k="remarks"></app-bi></th>
               </tr>
             </thead>
             <tbody>
@@ -264,6 +269,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
 })
 export class AttendanceComponent {
   private dataService = inject(DataService);
+  private pdfService = inject(PdfExportService);
 
   attBlock = 'All blocks · KLP estate';
   attCategory = 'All';
@@ -482,7 +488,12 @@ export class AttendanceComponent {
   }
 
   onSyncClick() { this.showToast('Biometric sync initiated. Fetching data from fingerprint server…'); }
-  onExportClick() { this.showToast('Exporting Attendance PDF for 25-May-2026…'); }
+  
+  downloadPdf(name: string) {
+    this.showToast('Generating PDF...');
+    this.pdfService.exportElementToPdf('attendance-export-content', name + '.pdf');
+  }
+
   onCloseClick() { this.showToast('Muster closed for 25-May-2026. Submitted to Field Officer.'); }
   onFilterClick() { 
     this.appliedBlock.set(this.attBlock);

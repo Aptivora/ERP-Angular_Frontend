@@ -5,20 +5,21 @@ import { PageHeadComponent } from '../../shared/components/page-head/page-head.c
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { BarChartComponent } from '../../shared/components/charts/bar-chart.component';
 import { DataService } from '../../core/services/data.service';
+import { PdfExportService } from '../../core/services/pdf-export.service';
 
 @Component({
   selector: 'app-reports',
   standalone: true,
   imports: [CommonModule, FormsModule, PageHeadComponent, IconComponent, BarChartComponent],
   template: `
-    <div class="page">
+    <div class="page" id="reports-export-content">
       <app-page-head
         title="Reports & Analytics"
         ml="റിപ്പോർട്ടുകൾ"
         sub="Production · Wages · Yield variance · Compliance · Audit"
       >
         <ng-container actions>
-          <button class="btn ghost sm" (click)="onAction('Exporting report as CSV...')"><app-icon name="Download" [size]="13"></app-icon>Export</button>
+          <button class="btn ghost sm" (click)="downloadPdf('reports')"><app-icon name="Download" [size]="13"></app-icon>Export PDF</button>
           <button class="btn ghost sm" (click)="onAction('Report schedule configured.')">Schedule</button>
           <button class="btn primary sm" (click)="onAction('Opening custom report builder...')"><app-icon name="Plus" [size]="13"></app-icon>Custom report</button>
         </ng-container>
@@ -220,6 +221,7 @@ import { DataService } from '../../core/services/data.service';
 export class ReportsComponent {
   tab = 'production';
   dataService = inject(DataService);
+  private pdfService = inject(PdfExportService);
   
   toastMessage = signal<string | null>(null);
   selectedEstate = signal('All estates');
@@ -347,5 +349,10 @@ export class ReportsComponent {
 
   onAction(msg: string) {
     this.showToast(msg);
+  }
+
+  downloadPdf(name: string) {
+    this.showToast('Generating PDF...');
+    this.pdfService.exportElementToPdf('reports-export-content', name + '.pdf');
   }
 }

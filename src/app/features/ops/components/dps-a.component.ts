@@ -5,16 +5,17 @@ import { PageHeadComponent } from '../../../shared/components/page-head/page-hea
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { BarChartComponent } from '../../../shared/components/charts/bar-chart.component';
 import { DataService } from '../../../core/services/data.service';
+import { BiComponent } from '../../../shared/components/bi/bi.component';
 
 @Component({
   selector: 'app-dps-a',
   standalone: true,
-  imports: [CommonModule, FormsModule, IconComponent],
+  imports: [CommonModule, FormsModule, IconComponent, BiComponent],
   template: `
     <div class="row mb-16 gap-16 dps-form-row" style="flex-wrap: wrap;">
-      <div class="field"><label>Date</label><input class="input mono" [value]="'25-05-2026'" readonly style="width: 130px;"/></div>
+      <div class="field"><label><app-bi k="date"></app-bi></label><input class="input mono" [value]="'25-05-2026'" readonly style="width: 130px;"/></div>
       <div class="field">
-        <label>Block</label>
+        <label><app-bi k="block"></app-bi></label>
         <select class="select" style="min-width: 200px;" [(ngModel)]="block">
           <option>KLP-B07 · Kallarkutty B7</option>
           <option>KLP-B08 · Kallarkutty B8</option>
@@ -22,7 +23,7 @@ import { DataService } from '../../../core/services/data.service';
         </select>
       </div>
       <div class="field">
-        <label>Cycle</label>
+        <label><app-bi k="cycle"></app-bi></label>
         <select class="select" [(ngModel)]="cycle">
           <option>D1 · Today</option>
           <option>D2</option>
@@ -31,42 +32,42 @@ import { DataService } from '../../../core/services/data.service';
         </select>
       </div>
       <div class="field">
-        <label>Supervisor</label>
+        <label><app-bi k="supervisor"></app-bi></label>
         <div class="row gap-8" style="padding: 8px 10px; border: var(--bd-soft); border-radius: 4px;">
           <div class="avatar" style="width: 20px; height: 20px; font-size: 9px;">RV</div>
           <span style="font-size: 12px; font-weight: 600;">Reena Vijayan</span>
         </div>
       </div>
       <div style="margin-left: auto;" class="row gap-8 mt-16">
-        <button class="btn ghost sm" (click)="onAction('Bulk import dialog: Upload CSV/Excel with tapper-wise production data.')"><app-icon name="Upload" [size]="13"></app-icon>Bulk import</button>
-        <button class="btn ghost sm" (click)="onAction('Printing DPS sheet for ' + block + '…')"><app-icon name="Print" [size]="13"></app-icon>Print sheet</button>
-        <button class="btn primary sm" (click)="onAction('DPS verified & submitted for ' + block + ' (' + cycle + ').')"><app-icon name="Check" [size]="13"></app-icon>Verify & submit</button>
+        <button class="btn ghost sm" (click)="onAction('Bulk import dialog: Upload CSV/Excel with tapper-wise production data.')"><app-icon name="Upload" [size]="13"></app-icon><app-bi k="bulk_import"></app-bi></button>
+        <button class="btn ghost sm" (click)="printPage()"><app-icon name="Print" [size]="13"></app-icon><app-bi k="print_sheet"></app-bi></button>
+        <button class="btn primary sm" (click)="onAction('DPS verified & submitted for ' + block + ' (' + cycle + ').')"><app-icon name="Check" [size]="13"></app-icon><app-bi k="verify_submit"></app-bi></button>
       </div>
     </div>
 
     <div class="card bold">
       <div class="card-head">
-        <div class="ttl">DPS · Block KLP-B07 · D1 cycle · 25-May-2026</div>
+        <div class="ttl">DPS · Block KLP-B07 · D1 <app-bi k="cycle"></app-bi> · 25-May-2026</div>
         <div class="row gap-16" style="margin-left: auto; font-size: 12px;">
-          <span>Trees in block: <b class="mono">14,250</b></span>
-          <span>Expected yield: <b class="mono">35.2 kg/tapper</b></span>
-          <span>Base DRC: <b class="mono">33.0%</b></span>
+          <span><app-bi k="trees_in_block"></app-bi>: <b class="mono">14,250</b></span>
+          <span><app-bi k="expected_yield"></app-bi>: <b class="mono">35.2 kg/<app-bi k="tapper"></app-bi></b></span>
+          <span><app-bi k="base_drc"></app-bi>: <b class="mono">33.0%</b></span>
         </div>
       </div>
       <table class="tbl">
         <thead>
           <tr>
             <th>#</th>
-            <th>Tapper</th>
-            <th class="num">Trees Tapped</th>
-            <th class="num">Cups Recovered</th>
-            <th class="num">Latex (L)</th>
-            <th class="num">Wt (kg)</th>
-            <th class="num">Scrap (kg)</th>
-            <th class="num">DRC %</th>
-            <th class="num">Dry kg</th>
-            <th class="num">Δ Base</th>
-            <th>Status</th>
+            <th><app-bi k="tapper"></app-bi></th>
+            <th class="num"><app-bi k="trees_tapped"></app-bi></th>
+            <th class="num"><app-bi k="cups_recovered"></app-bi></th>
+            <th class="num"><app-bi k="latex_l"></app-bi></th>
+            <th class="num"><app-bi k="wt_kg"></app-bi></th>
+            <th class="num"><app-bi k="scrap_kg"></app-bi></th>
+            <th class="num"><app-bi k="drc_pct"></app-bi></th>
+            <th class="num"><app-bi k="dry_kg"></app-bi></th>
+            <th class="num"><app-bi k="base"></app-bi></th>
+            <th><app-bi k="status"></app-bi></th>
           </tr>
         </thead>
         <tbody>
@@ -86,15 +87,15 @@ import { DataService } from '../../../core/services/data.service';
               </td>
               <td>
                 @if (r.status === 'verified') {
-                  <span class="badge leaf"><app-icon name="Check" [size]="10"></app-icon> Verified</span>
+                  <span class="badge leaf"><app-icon name="Check" [size]="10"></app-icon> <app-bi k="verified"></app-bi></span>
                 } @else {
-                  <span class="badge amber">Pending</span>
+                  <span class="badge amber"><app-bi k="pending"></app-bi></span>
                 }
               </td>
             </tr>
           }
           <tr style="background: var(--bg-2); font-weight: 700;">
-            <td colspan="2">TOTALS</td>
+            <td colspan="2"><app-bi k="totals"></app-bi></td>
             <td class="num">2,692</td>
             <td class="num">2,582</td>
             <td class="num">252.8</td>
@@ -134,5 +135,9 @@ export class DpsAComponent {
 
   onAction(msg: string) {
     alert(msg);
+  }
+
+  printPage() {
+    window.print();
   }
 }

@@ -3,22 +3,26 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PageHeadComponent } from '../../shared/components/page-head/page-head.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
+import { BiComponent } from '../../shared/components/bi/bi.component';
 
 @Component({
   selector: 'app-collection',
   standalone: true,
-  imports: [CommonModule, FormsModule, PageHeadComponent, IconComponent],
+  imports: [CommonModule, FormsModule, PageHeadComponent, IconComponent, BiComponent],
   template: `
     <div class="page">
       <app-page-head
         title="Collection Centre"
-        ml="കളക്ഷൻ കേന്ദ്രം"
-        sub="CC-Main · Kulathupuzha · Intake, weighing, DRC sampling"
+        ml="ശേഖരണ കേന്ദ്രം"
+        [sub]="''"
       >
+        <ng-container content>
+          <div class="muted mt-4" style="font-size: 13px;"><app-bi k="cc_sub"></app-bi></div>
+        </ng-container>
         <ng-container actions>
           <div class="row gap-8 responsive-actions">
-            <button class="btn ghost sm" (click)="onAction('Printing today\\'s intake register (42 batches)…')"><app-icon name="Print" [size]="13"></app-icon>Print intake</button>
-            <button class="btn primary sm" (click)="onAction('+ New intake: Scan tapper ID or select block to begin weighing.')"><app-icon name="Plus" [size]="13"></app-icon>New intake</button>
+            <button class="btn ghost sm" (click)="printPage()"><app-icon name="Print" [size]="13"></app-icon><app-bi k="print_intake"></app-bi></button>
+            <button class="btn primary sm" (click)="onAction('+ New intake: Scan tapper ID or select block to begin weighing.')"><app-icon name="Plus" [size]="13"></app-icon><app-bi k="new_intake"></app-bi></button>
           </div>
         </ng-container>
       </app-page-head>
@@ -26,9 +30,9 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
       <div class="grid g-4 mb-16">
         @for (k of kpis; track k.l) {
           <div class="kpi">
-            <div class="label">{{ k.l }}</div>
-            <div class="value">{{ k.v }}<span class="unit">{{ k.u }}</span></div>
-            <div class="delta">{{ k.d }}</div>
+            <div class="label"><app-bi [k]="k.l"></app-bi></div>
+            <div class="value">{{ k.v }}<span class="unit"><app-bi [k]="k.u"></app-bi></span></div>
+            <div class="delta"><app-bi [k]="k.d"></app-bi></div>
           </div>
         }
       </div>
@@ -36,22 +40,22 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
       <div class="grid mb-16" style="grid-template-columns: 2fr 1fr;">
         <div class="card bold">
           <div class="card-head">
-            <div class="ttl">Intake log · today</div>
+            <div class="ttl"><app-bi k="intake_log"></app-bi></div>
             <div class="row gap-8" style="margin-left: auto;">
-              <button class="chip" [class.active]="activeFilter() === 'All'" (click)="setFilter('All')" style="cursor: pointer; border: none; background: var(--bg-2);">All</button>
-              <button class="chip" [class.active]="activeFilter() === 'Auto'" (click)="setFilter('Auto')" style="cursor: pointer; border: none; background: var(--bg-2);">Auto</button>
-              <button class="chip" [class.active]="activeFilter() === 'Manual'" (click)="setFilter('Manual')" style="cursor: pointer; border: none; background: var(--bg-2);">Manual</button>
-              <button class="chip" [class.active]="activeFilter() === 'Disputed'" (click)="setFilter('Disputed')" style="cursor: pointer; border: none; background: var(--bg-2);">Disputed</button>
+              <button class="chip" [class.active]="activeFilter() === 'All'" (click)="setFilter('All')" style="cursor: pointer; border: none; background: var(--bg-2);"><app-bi k="all"></app-bi></button>
+              <button class="chip" [class.active]="activeFilter() === 'Auto'" (click)="setFilter('Auto')" style="cursor: pointer; border: none; background: var(--bg-2);"><app-bi k="auto"></app-bi></button>
+              <button class="chip" [class.active]="activeFilter() === 'Manual'" (click)="setFilter('Manual')" style="cursor: pointer; border: none; background: var(--bg-2);"><app-bi k="manual"></app-bi></button>
+              <button class="chip" [class.active]="activeFilter() === 'Disputed'" (click)="setFilter('Disputed')" style="cursor: pointer; border: none; background: var(--bg-2);"><app-bi k="disputed"></app-bi></button>
             </div>
           </div>
           <div class="table-responsive" style="overflow-x: auto; width: 100%;">
             <table class="tbl">
               <thead>
                 <tr>
-                  <th>Time</th><th>Batch</th><th>From block</th><th>Tapper</th>
-                  <th class="num">Gross (kg)</th><th class="num">Net (kg)</th>
-                  <th class="num">DRC %</th><th class="num">Dry</th>
-                  <th>Status</th>
+                  <th><app-bi k="time"></app-bi></th><th><app-bi k="batch"></app-bi></th><th><app-bi k="from_block"></app-bi></th><th><app-bi k="tapper"></app-bi></th>
+                  <th class="num"><app-bi k="gross_kg"></app-bi></th><th class="num"><app-bi k="net_kg"></app-bi></th>
+                  <th class="num"><app-bi k="drc_pct"></app-bi></th><th class="num"><app-bi k="dry"></app-bi></th>
+                  <th><app-bi k="status"></app-bi></th>
                 </tr>
               </thead>
               <tbody>
@@ -75,12 +79,12 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
 
         <div class="col">
           <div class="card bold">
-            <div class="card-head"><div class="ttl">DRC test · live</div></div>
+            <div class="card-head"><div class="ttl"><app-bi k="drc_test"></app-bi></div></div>
             <div class="card-body col" style="gap: 14px;">
               <div class="row gap-16" style="align-items: flex-end;">
-                <div class="field grow"><label>Sample ID</label><input class="input mono" [value]="'DRC-2026-0512-08'"/></div>
+                <div class="field grow"><label><app-bi k="sample_id"></app-bi></label><input class="input mono" [value]="'DRC-2026-0512-08'"/></div>
                 <div class="field">
-                  <label>Method</label>
+                  <label><app-bi k="method"></app-bi></label>
                   <select class="select" [(ngModel)]="collMethod">
                     <option>Field hydrometer</option>
                     <option>Oven dry (lab)</option>
@@ -88,20 +92,20 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
                 </div>
               </div>
               <div class="grid g-3" style="gap: 8px;">
-                <div><div class="muted up" style="font-size: 10px;">Latex wt</div><div class="mono" style="font-size: 20px; font-weight: 700;">26.8 kg</div></div>
-                <div><div class="muted up" style="font-size: 10px;">Sample</div><div class="mono" style="font-size: 20px; font-weight: 700;">100 ml</div></div>
-                <div><div class="muted up" style="font-size: 10px;">Coagulum dry</div><div class="mono" style="font-size: 20px; font-weight: 700;">31.4 g</div></div>
+                <div><div class="muted up" style="font-size: 10px;"><app-bi k="latex_wt"></app-bi></div><div class="mono" style="font-size: 20px; font-weight: 700;">26.8 kg</div></div>
+                <div><div class="muted up" style="font-size: 10px;"><app-bi k="sample"></app-bi></div><div class="mono" style="font-size: 20px; font-weight: 700;">100 ml</div></div>
+                <div><div class="muted up" style="font-size: 10px;"><app-bi k="coagulum_dry"></app-bi></div><div class="mono" style="font-size: 20px; font-weight: 700;">31.4 g</div></div>
               </div>
               <div style="padding: 12px; background: var(--oxide-soft); border-radius: 6px; font-size: 12px;">
                 <b class="hl-oxide">DRC 31.4% — below normal range (33–35%)</b><br/>
-                <span class="muted">Recommend: collect fresh sample · check coagulation time · verify with lab oven-dry method.</span>
+                <span class="muted"><app-bi k="recommend_fresh"></app-bi></span>
               </div>
-              <button class="btn primary" (click)="onAction('DRC result recorded (31.4% via ' + collMethod + '). Flagged for retest.')">Record & flag for retest</button>
+              <button class="btn primary" (click)="onAction('DRC result recorded (31.4% via ' + collMethod + '). Flagged for retest.')"><app-bi k="record_flag"></app-bi></button>
             </div>
           </div>
 
           <div class="card bold">
-            <div class="card-head"><div class="ttl">Block contribution</div></div>
+            <div class="card-head"><div class="ttl"><app-bi k="block_contrib"></app-bi></div></div>
             <div class="card-body col" style="gap: 8px; font-size: 12px;">
               @for (r of blocks; track r.b) {
                 <div>
@@ -130,10 +134,10 @@ export class CollectionComponent {
   activeFilter = signal<'All' | 'Auto' | 'Manual' | 'Disputed'>('All');
 
   kpis = [
-    {l:'Today intake', v:'2,584', u:'kg wet', d:'42 batches · 6 still to come'},
-    {l:'Avg DRC',      v:'33.8',  u:'%',     d:'5 samples flagged for retest'},
-    {l:'Dry equivalent',v:'873.4',u:'kg',    d:'lot SFCK/KLP/2026/0512'},
-    {l:'Scrap rubber', v:'212',   u:'kg',    d:'awaiting grading'},
+    {l:'today_intake', v:'2,584', u:'kg_wet', d:'batches_desc'},
+    {l:'avg_drc',      v:'33.8',  u:'pct',     d:'samples_flagged'},
+    {l:'dry_equiv',v:'873.4',u:'kg',    d:'lot_sfck'},
+    {l:'scrap_rubber', v:'212',   u:'kg',    d:'awaiting_grading'},
   ];
 
   intakes = [
@@ -171,5 +175,9 @@ export class CollectionComponent {
 
   onAction(msg: string) {
     this.showToast(msg);
+  }
+
+  printPage() {
+    window.print();
   }
 }

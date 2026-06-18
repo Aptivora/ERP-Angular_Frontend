@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { PageHeadComponent } from '../../shared/components/page-head/page-head.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { DataService, Worker } from '../../core/services/data.service';
+import { PdfExportService } from '../../core/services/pdf-export.service';
+import { BiComponent } from '../../shared/components/bi/bi.component';
 
 @Component({
   selector: 'app-hierarchy-node',
@@ -35,18 +37,18 @@ import { Input } from '@angular/core';
 @Component({
   selector: 'app-workers',
   standalone: true,
-  imports: [CommonModule, FormsModule, PageHeadComponent, IconComponent, HierarchyNodeComponent],
+  imports: [CommonModule, FormsModule, PageHeadComponent, IconComponent, HierarchyNodeComponent, BiComponent],
   template: `
-    <div class="page">
+    <div class="page" id="workers-export-content">
       <app-page-head
         title="Worker Master"
         ml="തൊഴിലാളി മാസ്റ്റർ"
         sub="Permanent · Casual · Dependent · Kulathupuzha Estate"
       >
         <ng-container actions>
-          <button class="btn ghost sm" (click)="onAction('Import CSV: Select a CSV file with columns EMP ID, Name, Category, Role, Block, Joined, Bank, Aadhaar, Wage.')"><app-icon name="Upload" [size]="13"></app-icon>Import CSV</button>
-          <button class="btn ghost sm" (click)="onAction('Exporting worker register (' + cats().Total + ' records) as XLSX…')"><app-icon name="Download" [size]="13"></app-icon>Export</button>
-          <button class="btn primary sm" (click)="showAddModal = true"><app-icon name="Plus" [size]="13"></app-icon>New worker</button>
+          <button class="btn ghost sm" (click)="onAction('Import CSV: Select a CSV file with columns EMP ID, Name, Category, Role, Block, Joined, Bank, Aadhaar, Wage.')"><app-icon name="Upload" [size]="13"></app-icon><app-bi k="import_csv"></app-bi></button>
+          <button class="btn ghost sm" (click)="downloadPdf('workers_register')"><app-icon name="Download" [size]="13"></app-icon><app-bi k="export_pdf"></app-bi></button>
+          <button class="btn primary sm" (click)="showAddModal = true"><app-icon name="Plus" [size]="13"></app-icon><app-bi k="new_worker"></app-bi></button>
         </ng-container>
       </app-page-head>
 
@@ -119,7 +121,7 @@ import { Input } from '@angular/core';
       }
 
       <div class="card bold mb-16">
-        <div class="card-head"><div class="ttl">Quick mark</div></div>
+        <div class="card-head"><div class="ttl"><app-bi k="quick_mark"></app-bi></div></div>
         <div class="card-body">
            <div class="row gap-8">
              <input 
@@ -143,24 +145,24 @@ import { Input } from '@angular/core';
 
       <div class="grid g-4 mb-16">
         <div class="kpi">
-          <div class="label">Permanent · സ്ഥിരം</div>
-          <div class="value">{{ cats().Permanent }}<span class="unit">workers</span></div>
-          <div class="delta">8 retiring this quarter</div>
+          <div class="label"><app-bi k="wk_perm"></app-bi></div>
+          <div class="value">{{ cats().Permanent }}<span class="unit"><app-bi k="workers_unit"></app-bi></span></div>
+          <div class="delta">8 <app-bi k="retiring_q"></app-bi></div>
         </div>
         <div class="kpi">
-          <div class="label">Casual</div>
-          <div class="value">{{ cats().Casual }}<span class="unit">workers</span></div>
-          <div class="delta">12 added this month</div>
+          <div class="label"><app-bi k="wk_cas"></app-bi></div>
+          <div class="value">{{ cats().Casual }}<span class="unit"><app-bi k="workers_unit"></app-bi></span></div>
+          <div class="delta">12 <app-bi k="added_m"></app-bi></div>
         </div>
         <div class="kpi">
-          <div class="label">Dependent</div>
-          <div class="value">{{ cats().Dependent }}<span class="unit">workers</span></div>
-          <div class="delta">2 awaiting documents</div>
+          <div class="label"><app-bi k="wk_dep"></app-bi></div>
+          <div class="value">{{ cats().Dependent }}<span class="unit"><app-bi k="workers_unit"></app-bi></span></div>
+          <div class="delta">2 <app-bi k="awaiting_doc"></app-bi></div>
         </div>
         <div class="kpi">
-          <div class="label">Total</div>
-          <div class="value">{{ cats().Total }}<span class="unit">workers</span></div>
-          <div class="delta">96.7% utilisation today</div>
+          <div class="label"><app-bi k="wk_tot"></app-bi></div>
+          <div class="value">{{ cats().Total }}<span class="unit"><app-bi k="workers_unit"></app-bi></span></div>
+          <div class="delta">96.7% <app-bi k="utilization_today"></app-bi></div>
         </div>
       </div>
 
@@ -179,8 +181,8 @@ import { Input } from '@angular/core';
           <option>All blocks</option><option>KLP-B07</option><option>KLP-B08</option><option>KLP-B12</option>
         </select>
         <div style="margin-left: auto;" class="row gap-8">
-          <span class="muted" style="font-size: 12px;">Showing {{ filteredWorkers().length }} of {{ cats().Total }}</span>
-          <button class="btn ghost sm" (click)="onAction('Filtering workers: Category = ' + wkCategory() + ', Role = ' + wkRole() + ', Block = ' + wkBlock() + (wkSearch() ? ', Search = ' + wkSearch() : ''))"><app-icon name="Filter" [size]="13"></app-icon>More filters</button>
+          <span class="muted" style="font-size: 12px;"><app-bi k="showing"></app-bi> {{ filteredWorkers().length }} <app-bi k="of"></app-bi> {{ cats().Total }}</span>
+          <button class="btn ghost sm" (click)="onAction('Filtering workers: Category = ' + wkCategory() + ', Role = ' + wkRole() + ', Block = ' + wkBlock() + (wkSearch() ? ', Search = ' + wkSearch() : ''))"><app-icon name="Filter" [size]="13"></app-icon><app-bi k="more_filters"></app-bi></button>
         </div>
       </div>
 
@@ -189,9 +191,9 @@ import { Input } from '@angular/core';
           <table class="tbl">
             <thead>
               <tr>
-                <th>EMP ID</th><th>Name / പേര്</th><th>Category</th><th>Role</th>
-                <th>Block</th><th>Joined</th><th>Bank Account</th><th>Aadhaar</th>
-                <th class="num">Day rate</th><th></th>
+                <th><app-bi k="emp_id"></app-bi></th><th><app-bi k="name"></app-bi> / പേര്</th><th><app-bi k="category"></app-bi></th><th><app-bi k="role"></app-bi></th>
+                <th><app-bi k="block"></app-bi></th><th><app-bi k="joined"></app-bi></th><th><app-bi k="bank_acct"></app-bi></th><th><app-bi k="aadhaar"></app-bi></th>
+                <th class="num"><app-bi k="day_rate"></app-bi></th><th></th>
               </tr>
             </thead>
             <tbody>
@@ -232,17 +234,17 @@ import { Input } from '@angular/core';
           </table>
         </div>
         <div class="card-foot">
-          <span class="muted">Page 1 of 42</span>
+          <span class="muted"><app-bi k="page"></app-bi> 1 <app-bi k="of"></app-bi> 42</span>
           <div style="margin-left: auto;" class="row gap-8">
-            <button class="btn ghost sm" (click)="onAction('Loading previous page (page 0 of 42)')">&#x2039; Prev</button>
-            <button class="btn ghost sm" (click)="onAction('Loading next page (page 2 of 42)')">Next &#x203a;</button>
+            <button class="btn ghost sm" (click)="onAction('Loading previous page (page 0 of 42)')">&#x2039; <app-bi k="prev"></app-bi></button>
+            <button class="btn ghost sm" (click)="onAction('Loading next page (page 2 of 42)')"><app-bi k="next"></app-bi> &#x203a;</button>
           </div>
         </div>
       </div>
 
       <!-- Org hierarchy strip -->
       <div class="card bold mt-24">
-        <div class="card-head"><div class="ttl">Employee hierarchy · Kulathupuzha Estate</div></div>
+        <div class="card-head"><div class="ttl"><app-bi k="org_hierarchy"></app-bi></div></div>
         <div class="card-body" style="padding: 24px;">
           <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
             <app-hierarchy-node title="Managing Director" name="Dr. K. Vasudevan IAS" sub="SFCK HQ"></app-hierarchy-node>
@@ -272,6 +274,7 @@ import { Input } from '@angular/core';
 })
 export class WorkersComponent {
   dataService = inject(DataService);
+  private pdfService = inject(PdfExportService);
   workers = this.dataService.workers;
 
   wkCategory = signal('All categories');
@@ -416,5 +419,9 @@ export class WorkersComponent {
 
   onAction(msg: string) {
     alert(msg);
+  }
+
+  downloadPdf(name: string) {
+    this.pdfService.exportElementToPdf('workers-export-content', name + '.pdf');
   }
 }

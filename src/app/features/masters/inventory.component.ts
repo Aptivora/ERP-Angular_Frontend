@@ -4,30 +4,35 @@ import { FormsModule } from '@angular/forms';
 import { PageHeadComponent } from '../../shared/components/page-head/page-head.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { DataService } from '../../core/services/data.service';
+import { PdfExportService } from '../../core/services/pdf-export.service';
+import { BiComponent } from '../../shared/components/bi/bi.component';
 
 @Component({
   selector: 'app-inventory',
   standalone: true,
-  imports: [CommonModule, FormsModule, PageHeadComponent, IconComponent],
+  imports: [CommonModule, FormsModule, PageHeadComponent, IconComponent, BiComponent],
   template: `
-    <div class="page">
+    <div class="page" id="inventory-export-content">
       <app-page-head
         title="Inventory & Stock"
-        ml="ഇൻവെന്ററി"
-        sub="Ammonia, fertilizers, latex cups, tools · across 5 estates"
+        ml="ഇൻവെന്ററി & സ്റ്റോക്ക്"
+        [sub]="''"
       >
+        <ng-container content>
+          <div class="muted mt-4" style="font-size: 13px;"><app-bi k="inv_sub"></app-bi></div>
+        </ng-container>
         <ng-container actions>
-          <button class="btn ghost sm" (click)="onAction('Generating stock report as PDF… ' + invCategory + ' / ' + invLocation + ' / ' + invStatus)"><app-icon name="Download" [size]="13"></app-icon>Stock report</button>
-          <button class="btn ghost sm" (click)="onAction('Goods Received Note: Enter supplier, PO number, items received.')">GRN</button>
-          <button class="btn primary sm" (click)="onAction('+ Issue Voucher: Select item, quantity, destination block, and supervisor.')"><app-icon name="Plus" [size]="13"></app-icon>Issue voucher</button>
+          <button class="btn ghost sm" (click)="downloadPdf('inventory_report')"><app-icon name="Download" [size]="13"></app-icon><app-bi k="stock_report"></app-bi></button>
+          <button class="btn ghost sm" (click)="onAction('Goods Received Note: Enter supplier, PO number, items received.')"><app-bi k="grn"></app-bi></button>
+          <button class="btn primary sm" (click)="onAction('+ Issue Voucher: Select item, quantity, destination block, and supervisor.')"><app-icon name="Plus" [size]="13"></app-icon><app-bi k="issue_voucher"></app-bi></button>
         </ng-container>
       </app-page-head>
 
       <div class="grid g-4 mb-16">
-        <div class="kpi"><div class="label">SKUs tracked</div><div class="value">124</div><div class="delta">8 critical low</div></div>
-        <div class="kpi"><div class="label">Inventory value</div><div class="value">₹62.4<span class="unit">lakh</span></div><div class="delta">incl. WIP latex stock</div></div>
-        <div class="kpi"><div class="label">Issued this week</div><div class="value">₹4.8<span class="unit">lakh</span></div><div class="delta up">▼ 12% vs last week</div></div>
-        <div class="kpi"><div class="label">Stock-out events</div><div class="value">3<span class="unit">/30d</span></div><div class="delta down">2 due to vendor delay</div></div>
+        <div class="kpi"><div class="label"><app-bi k="skus_tracked"></app-bi></div><div class="value">124</div><div class="delta">8 critical low</div></div>
+        <div class="kpi"><div class="label"><app-bi k="inv_value"></app-bi></div><div class="value">₹162.4<span class="unit">lakh</span></div><div class="delta">incl. WIP latex stock</div></div>
+        <div class="kpi"><div class="label"><app-bi k="issued_week"></app-bi></div><div class="value">₹14.8<span class="unit">lakh</span></div><div class="delta up">↑ 12% vs last week</div></div>
+        <div class="kpi"><div class="label"><app-bi k="stockouts"></app-bi></div><div class="value">3<span class="unit">/30d</span></div><div class="delta down">2 due to vendor delay</div></div>
       </div>
 
       <div class="row mb-16 gap-8" style="flex-wrap: wrap;">
@@ -48,12 +53,12 @@ import { DataService } from '../../core/services/data.service';
 
       <div class="grid mb-16" style="grid-template-columns: 2fr 1fr;">
         <div class="card bold">
-          <div class="card-head"><div class="ttl">Stock register</div></div>
+          <div class="card-head"><div class="ttl"><app-bi k="stock_register"></app-bi></div></div>
           <table class="tbl">
             <thead>
               <tr>
-                <th>SKU</th><th>Item</th><th class="num">Stock</th><th>UoM</th>
-                <th>Re-order</th><th>Location</th><th class="num">Unit ₹</th><th class="num">Value</th><th>Status</th>
+                <th><app-bi k="sku"></app-bi></th><th><app-bi k="item"></app-bi></th><th class="num"><app-bi k="stock"></app-bi></th><th><app-bi k="uom"></app-bi></th>
+                <th><app-bi k="reorder"></app-bi></th><th><app-bi k="location"></app-bi></th><th class="num"><app-bi k="unit_rs"></app-bi></th><th class="num"><app-bi k="value"></app-bi></th><th><app-bi k="status"></app-bi></th>
               </tr>
             </thead>
             <tbody>
@@ -88,9 +93,9 @@ import { DataService } from '../../core/services/data.service';
 
         <div class="col">
           <div class="card bold">
-            <div class="card-head"><div class="ttl">Today's issues</div></div>
+            <div class="card-head"><div class="ttl"><app-bi k="todays_issues"></app-bi></div></div>
             <table class="tbl dense">
-              <thead><tr><th>Voucher</th><th>To</th><th>Item</th><th class="num">Qty</th></tr></thead>
+              <thead><tr><th><app-bi k="voucher"></app-bi></th><th><app-bi k="to"></app-bi></th><th><app-bi k="item"></app-bi></th><th class="num"><app-bi k="qty"></app-bi></th></tr></thead>
               <tbody>
                 <tr><td class="mono"><b>ISS-0824</b></td><td>KLP-B07</td><td>Ammonia 25%</td><td class="num">24 L</td></tr>
                 <tr><td class="mono"><b>ISS-0825</b></td><td>KLP-B08</td><td>Ammonia 25%</td><td class="num">18 L</td></tr>
@@ -139,6 +144,7 @@ import { DataService } from '../../core/services/data.service';
 })
 export class InventoryComponent {
   dataService = inject(DataService);
+  private pdfService = inject(PdfExportService);
   
   searchQuery = signal('');
   invCategory = signal('All categories');
@@ -193,5 +199,10 @@ export class InventoryComponent {
 
   onAction(msg: string) {
     this.showToast(msg);
+  }
+
+  downloadPdf(name: string) {
+    this.showToast('Generating PDF...');
+    this.pdfService.exportElementToPdf('inventory-export-content', name + '.pdf');
   }
 }

@@ -4,55 +4,60 @@ import { PageHeadComponent } from '../../shared/components/page-head/page-head.c
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { DataService } from '../../core/services/data.service';
 import { DonutComponent } from '../../shared/components/charts/donut.component';
+import { PdfExportService } from '../../core/services/pdf-export.service';
+import { BiComponent } from '../../shared/components/bi/bi.component';
 
 @Component({
   selector: 'app-assets',
   standalone: true,
-  imports: [CommonModule, PageHeadComponent, IconComponent, DonutComponent],
+  imports: [CommonModule, PageHeadComponent, IconComponent, DonutComponent, BiComponent],
   template: `
-    <div class="page">
+    <div class="page" id="assets-export-content">
       <app-page-head
         title="Estate & Block Master"
         ml="എസ്റ്റേറ്റ് & ബ്ലോക്ക് മാസ്റ്റർ"
-        sub="Land, divisions, blocks, tree census, maturity status"
+        [sub]="''"
       >
+        <ng-container content>
+          <div class="muted mt-4" style="font-size: 13px;"><app-bi k="assets_sub"></app-bi></div>
+        </ng-container>
         <ng-container actions>
-          <button class="btn ghost sm" (click)="onAction('Exporting block register (144 blocks, 2.14M trees) as XLSX…')"><app-icon name="Download" [size]="13"></app-icon>Export</button>
-          <button class="btn primary sm" (click)="onAction('+ New Block: Enter block ID, name, division, hectares, tree count, variety, planted year.')"><app-icon name="Plus" [size]="13"></app-icon>New block</button>
+          <button class="btn ghost sm" (click)="downloadPdf('assets_report')"><app-icon name="Download" [size]="13"></app-icon><app-bi k="export_pdf"></app-bi></button>
+          <button class="btn primary sm" (click)="onAction('+ New Block: Enter block ID, name, division, hectares, tree count, variety, planted year.')"><app-icon name="Plus" [size]="13"></app-icon><app-bi k="new_block"></app-bi></button>
         </ng-container>
       </app-page-head>
 
       <div class="grid g-4 mb-16">
-        <div class="kpi"><div class="label">Estates</div><div class="value">5</div><div class="delta">4,960 hectares total</div></div>
-        <div class="kpi"><div class="label">Blocks</div><div class="value">144</div><div class="delta">108 mature · 26 immature · 10 CUT/slaughter</div></div>
-        <div class="kpi"><div class="label">Tree census</div><div class="value">2.14<span class="unit">M trees</span></div><div class="delta">last verified Mar 2026</div></div>
-        <div class="kpi"><div class="label">Replant queue</div><div class="value">42<span class="unit">hectares</span></div><div class="delta">FY26-27 plan</div></div>
+        <div class="kpi"><div class="label"><app-bi k="estates_kpi"></app-bi></div><div class="value">5</div><div class="delta">4,960 <app-bi k="hectares_total"></app-bi></div></div>
+        <div class="kpi"><div class="label"><app-bi k="blocks_kpi"></app-bi></div><div class="value">144</div><div class="delta">108 <app-bi k="mature_stats"></app-bi> 26 <app-bi k="immature_stats"></app-bi> 10 <app-bi k="cut_stats"></app-bi></div></div>
+        <div class="kpi"><div class="label"><app-bi k="tree_census"></app-bi></div><div class="value">2.14<span class="unit">M trees</span></div><div class="delta"><app-bi k="last_verified"></app-bi></div></div>
+        <div class="kpi"><div class="label"><app-bi k="replant_queue"></app-bi></div><div class="value">42<span class="unit">hectares</span></div><div class="delta"><app-bi k="fy_plan"></app-bi></div></div>
       </div>
 
       <div class="tabs mb-16">
         @for (t of tabs; track t.id) {
-          <div class="tab" [class.active]="tab === t.id" (click)="tab = t.id">{{ t.l }}</div>
+          <div class="tab" [class.active]="tab === t.id" (click)="tab = t.id"><app-bi [k]="t.l"></app-bi></div>
         }
       </div>
 
       @if (tab === 'blocks') {
         <div class="card bold">
           <div class="card-head">
-            <div class="ttl">Blocks · Kulathupuzha Estate</div>
+            <div class="ttl"><app-bi k="blocks_kpi"></app-bi> · Kulathupuzha Estate</div>
             <div class="row gap-8" style="margin-left: auto;">
-              <span class="chip"><span class="dot leaf"></span>Mature</span>
-              <span class="chip"><span class="dot amber"></span>Immature</span>
-              <span class="chip"><span class="dot oxide"></span>CUT</span>
-              <span class="chip"><span class="dot mute"></span>Slaughter</span>
+              <span class="chip"><span class="dot leaf"></span><app-bi k="mature"></app-bi></span>
+              <span class="chip"><span class="dot amber"></span><app-bi k="immature"></app-bi></span>
+              <span class="chip"><span class="dot oxide"></span><app-bi k="cut"></app-bi></span>
+              <span class="chip"><span class="dot mute"></span><app-bi k="slaughter"></app-bi></span>
             </div>
           </div>
           <table class="tbl">
             <thead>
               <tr>
-                <th>Block ID</th><th>Block name</th><th>Division</th>
-                <th class="num">Hect.</th><th class="num">Trees</th>
-                <th>Variety</th><th>Planted</th><th>Maturity</th><th>Cycle</th>
-                <th class="num">Tappers</th><th class="num">Yield/ha</th>
+                <th><app-bi k="block_id"></app-bi></th><th><app-bi k="block_name"></app-bi></th><th><app-bi k="division"></app-bi></th>
+                <th class="num"><app-bi k="hectares"></app-bi></th><th class="num"><app-bi k="trees"></app-bi></th>
+                <th><app-bi k="variety"></app-bi></th><th><app-bi k="planted"></app-bi></th><th><app-bi k="maturity"></app-bi></th><th><app-bi k="cycle"></app-bi></th>
+                <th class="num"><app-bi k="tappers"></app-bi></th><th class="num"><app-bi k="yield_ha"></app-bi></th>
               </tr>
             </thead>
             <tbody>
@@ -96,7 +101,7 @@ import { DonutComponent } from '../../shared/components/charts/donut.component';
         <div class="card bold">
           <table class="tbl">
             <thead>
-              <tr><th>ID</th><th>Estate</th><th>Manager</th><th class="num">Hect.</th><th class="num">Divisions</th><th class="num">Blocks</th><th class="num">Tappers</th><th>Address</th></tr>
+              <tr><th>ID</th><th><app-bi k="estate"></app-bi></th><th><app-bi k="manager"></app-bi></th><th class="num"><app-bi k="hectares"></app-bi></th><th class="num"><app-bi k="divisions"></app-bi></th><th class="num"><app-bi k="blocks_kpi"></app-bi></th><th class="num"><app-bi k="tappers"></app-bi></th><th><app-bi k="address"></app-bi></th></tr>
             </thead>
             <tbody>
               @for (e of dataService.estates; track e.id) {
@@ -160,12 +165,13 @@ import { DonutComponent } from '../../shared/components/charts/donut.component';
 export class AssetsComponent {
   tab = 'blocks';
   dataService = inject(DataService);
+  private pdfService = inject(PdfExportService);
 
   tabs = [
-    { id: 'estates', l: 'Estates' },
-    { id: 'divisions', l: 'Divisions' },
-    { id: 'blocks', l: 'Blocks' },
-    { id: 'trees', l: 'Tree Census' }
+    { id: 'estates', l: 'estates_kpi' },
+    { id: 'divisions', l: 'divisions' },
+    { id: 'blocks', l: 'blocks_kpi' },
+    { id: 'trees', l: 'tree_census' }
   ];
 
   blocksList = [
@@ -190,5 +196,9 @@ export class AssetsComponent {
 
   onAction(msg: string) {
     alert(msg);
+  }
+
+  downloadPdf(name: string) {
+    this.pdfService.exportElementToPdf('assets-export-content', name + '.pdf');
   }
 }

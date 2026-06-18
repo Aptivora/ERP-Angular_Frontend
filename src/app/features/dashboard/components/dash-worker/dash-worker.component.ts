@@ -4,11 +4,12 @@ import { IconComponent } from '../../../../shared/components/icon/icon.component
 import { BarChartComponent } from '../../../../shared/components/charts/bar-chart.component';
 import { DataService } from '../../../../core/services/data.service';
 import { Role } from '../../../../core/services/roles.service';
+import { BiComponent } from '../../../../shared/components/bi/bi.component';
 
 @Component({
   selector: 'app-dash-worker',
   standalone: true,
-  imports: [CommonModule, IconComponent, BarChartComponent],
+  imports: [CommonModule, IconComponent, BarChartComponent, BiComponent],
   template: `
     <div class="grid mb-16" style="grid-template-columns: 1fr 1.4fr; gap: 16px;">
       <!-- Hero card · my pay -->
@@ -23,29 +24,29 @@ import { Role } from '../../../../core/services/roles.service';
             </div>
           </div>
           <div style="margin-top: 24px;">
-            <div style="font-size: 10px; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;">Net pay · this cycle · അറ്റ വേതനം</div>
+            <div style="font-size: 10px; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;"><app-bi k="net_pay_cycle"></app-bi></div>
             <div class="mono" style="font-size: 46px; font-weight: 800; line-height: 1; margin-top: 4px;">₹{{ netPay.toLocaleString('en-IN') }}</div>
-            <div style="font-size: 12px; opacity: 0.85; margin-top: 4px;">NEFT credit · 31 May 2026 · {{ p.emp.acct }}</div>
+            <div style="font-size: 12px; opacity: 0.85; margin-top: 4px;"><app-bi k="neft_credit"></app-bi> · {{ p.emp.acct }}</div>
           </div>
           <div class="row gap-8 mt-16">
-            <a href="#payslip" class="btn" style="background: var(--accent-ink); color: var(--accent); border-color: var(--accent-ink);"><app-icon name="Download" [size]="12"></app-icon>Download payslip</a>
-            <a href="#payslip" class="btn ghost" style="border-color: rgba(255,255,255,0.4); color: var(--accent-ink);">View detail</a>
+            <a href="#payslip" class="btn" style="background: var(--accent-ink); color: var(--accent); border-color: var(--accent-ink);"><app-icon name="Download" [size]="12"></app-icon><app-bi k="download_payslip"></app-bi></a>
+            <a href="#payslip" class="btn ghost" style="border-color: rgba(255,255,255,0.4); color: var(--accent-ink);"><app-bi k="view_detail"></app-bi></a>
           </div>
         </div>
       </div>
 
       <!-- This cycle stats -->
       <div class="card bold">
-        <div class="card-head"><div class="ttl">This cycle so far · 21 Apr → 25 May</div></div>
+        <div class="card-head"><div class="ttl"><app-bi k="cycle_so_far"></app-bi></div></div>
         <div class="card-body grid g-4" style="gap: 14px;">
-          <div><div class="muted up" style="font-size: 10px;">Days present</div><div class="mono" style="font-size: 26px; font-weight: 700;">24<span style="font-size: 12px; color: var(--ink-3);">/26</span></div></div>
-          <div><div class="muted up" style="font-size: 10px;">Latex dry</div><div class="mono" style="font-size: 26px; font-weight: 700;">284<span style="font-size: 12px; color: var(--ink-3);"> kg</span></div></div>
-          <div><div class="muted up" style="font-size: 10px;">Δ Base yield</div><div class="mono" style="font-size: 26px; font-weight: 700; color: var(--leaf);">+ 6.4%</div></div>
-          <div><div class="muted up" style="font-size: 10px;">DRC avg</div><div class="mono" style="font-size: 26px; font-weight: 700;">33.8<span style="font-size: 12px; color: var(--ink-3);">%</span></div></div>
-          <div><div class="muted up" style="font-size: 10px;">Head-load</div><div class="mono" style="font-size: 26px; font-weight: 700;">1,402<span style="font-size: 12px; color: var(--ink-3);"> m</span></div></div>
-          <div><div class="muted up" style="font-size: 10px;">Incentive earned</div><div class="mono" style="font-size: 26px; font-weight: 700; color: var(--accent);">₹2,840</div></div>
-          <div><div class="muted up" style="font-size: 10px;">Leave balance</div><div class="mono" style="font-size: 26px; font-weight: 700;">8<span style="font-size: 12px; color: var(--ink-3);"> CL · 4 EL</span></div></div>
-          <div><div class="muted up" style="font-size: 10px;">Co-op balance</div><div class="mono" style="font-size: 26px; font-weight: 700;">₹4,200</div></div>
+          <div><div class="muted up" style="font-size: 10px;"><app-bi k="days_present"></app-bi></div><div class="mono" style="font-size: 26px; font-weight: 700;">24<span style="font-size: 12px; color: var(--ink-3);">/26</span></div></div>
+          <div><div class="muted up" style="font-size: 10px;"><app-bi k="latex_dry"></app-bi></div><div class="mono" style="font-size: 26px; font-weight: 700;">284<span style="font-size: 12px; color: var(--ink-3);"> <app-bi k="kg"></app-bi></span></div></div>
+          <div><div class="muted up" style="font-size: 10px;"><app-bi k="delta_base_yield"></app-bi></div><div class="mono" style="font-size: 26px; font-weight: 700; color: var(--leaf);">+ 6.4%</div></div>
+          <div><div class="muted up" style="font-size: 10px;"><app-bi k="drc_avg"></app-bi></div><div class="mono" style="font-size: 26px; font-weight: 700;">33.8<span style="font-size: 12px; color: var(--ink-3);">%</span></div></div>
+          <div><div class="muted up" style="font-size: 10px;"><app-bi k="head_load"></app-bi></div><div class="mono" style="font-size: 26px; font-weight: 700;">1,402<span style="font-size: 12px; color: var(--ink-3);"> m</span></div></div>
+          <div><div class="muted up" style="font-size: 10px;"><app-bi k="incentive_earned"></app-bi></div><div class="mono" style="font-size: 26px; font-weight: 700; color: var(--accent);">₹2,840</div></div>
+          <div><div class="muted up" style="font-size: 10px;"><app-bi k="leave_balance"></app-bi></div><div class="mono" style="font-size: 26px; font-weight: 700;">8<span style="font-size: 12px; color: var(--ink-3);"> <app-bi k="cl_el_sick"></app-bi></span></div></div>
+          <div><div class="muted up" style="font-size: 10px;"><app-bi k="coop_balance"></app-bi></div><div class="mono" style="font-size: 26px; font-weight: 700;">₹4,200</div></div>
         </div>
       </div>
     </div>
@@ -53,10 +54,10 @@ import { Role } from '../../../../core/services/roles.service';
     <div class="grid mb-16" style="grid-template-columns: 1.4fr 1fr; gap: 16px;">
       <div class="card bold">
         <div class="card-head">
-          <div class="ttl">My daily production · last 14 days</div>
+          <div class="ttl"><app-bi k="my_daily_prod"></app-bi></div>
           <div class="row gap-8" style="margin-left: auto; font-size: 11px;">
-            <span class="chip"><span class="dot" style="background: var(--accent);"></span>My dry kg</span>
-            <span class="chip"><span class="dot" style="background: var(--oxide);"></span>Base 10.5 kg</span>
+            <span class="chip"><span class="dot" style="background: var(--accent);"></span><app-bi k="my_dry_kg"></app-bi></span>
+            <span class="chip"><span class="dot" style="background: var(--oxide);"></span><app-bi k="base_105"></app-bi></span>
           </div>
         </div>
         <div class="card-body">
@@ -65,9 +66,9 @@ import { Role } from '../../../../core/services/roles.service';
       </div>
 
       <div class="card bold">
-        <div class="card-head"><div class="ttl">My recent days</div></div>
+        <div class="card-head"><div class="ttl"><app-bi k="my_recent_days"></app-bi></div></div>
         <table class="tbl dense">
-          <thead><tr><th>Date</th><th>Cycle</th><th class="num">Trees</th><th class="num">Dry kg</th><th>Status</th></tr></thead>
+          <thead><tr><th><app-bi k="date"></app-bi></th><th><app-bi k="cycle"></app-bi></th><th class="num"><app-bi k="trees_sm"></app-bi></th><th class="num"><app-bi k="dry_kg"></app-bi></th><th><app-bi k="status"></app-bi></th></tr></thead>
           <tbody>
             @for (r of recentDays; track r.d) {
               <tr>
@@ -77,9 +78,9 @@ import { Role } from '../../../../core/services/roles.service';
                 <td class="num mono"><b>{{ r.y }}</b></td>
                 <td>
                   @if (r.s === 'verified') {
-                    <span class="badge leaf">Verified</span>
+                    <span class="badge leaf"><app-bi k="verified"></app-bi></span>
                   } @else {
-                    <span class="badge amber">Pending</span>
+                    <span class="badge amber"><app-bi k="pending"></app-bi></span>
                   }
                 </td>
               </tr>
@@ -97,8 +98,8 @@ import { Role } from '../../../../core/services/roles.service';
               <app-icon [name]="a.i" [size]="20"></app-icon>
             </div>
             <div>
-              <div style="font-weight: 700; font-size: 13px;">{{ a.l }}</div>
-              <div class="muted" style="font-size: 11px;">{{ a.s }}</div>
+              <div style="font-weight: 700; font-size: 13px;"><app-bi [k]="a.l"></app-bi></div>
+              <div class="muted" style="font-size: 11px;"><app-bi [k]="a.s"></app-bi></div>
             </div>
           </div>
         </a>
@@ -106,27 +107,27 @@ import { Role } from '../../../../core/services/roles.service';
     </div>
 
     <div class="card bold">
-      <div class="card-head"><div class="ttl">Notices from estate office · എസ്റ്റേറ്റ് നോട്ടീസ്</div></div>
+      <div class="card-head"><div class="ttl"><app-bi k="notices_office"></app-bi></div></div>
       <div class="card-body col" style="gap: 12px; font-size: 12px;">
         <div class="row gap-8" style="align-items: flex-start;">
-          <span class="badge clay" style="min-width: 54px; justify-content: center;">WAGES</span>
+          <span class="badge clay" style="min-width: 54px; justify-content: center;"><app-bi k="wages"></app-bi></span>
           <div>
-            <b>DA hike of ₹186/day applicable from 29-Apr-2026</b>
-            <div class="muted">Per GO(Rt) 412/2026/Lab. Mid-cycle rate auto-prorated in this payslip.</div>
+            <b><app-bi k="notice1_title"></app-bi></b>
+            <div class="muted"><app-bi k="notice1_desc"></app-bi></div>
           </div>
         </div>
         <div class="row gap-8" style="align-items: flex-start; padding-top: 10px; border-top: var(--bd-soft);">
-          <span class="badge leaf" style="min-width: 54px; justify-content: center;">MEDICAL</span>
+          <span class="badge leaf" style="min-width: 54px; justify-content: center;"><app-bi k="medical"></app-bi></span>
           <div>
-            <b>Free health camp · 02 June 2026 · Kulathupuzha Estate clinic</b>
-            <div class="muted">All workers and dependents eligible. Report 08:00 to 14:00.</div>
+            <b><app-bi k="notice2_title"></app-bi></b>
+            <div class="muted"><app-bi k="notice2_desc"></app-bi></div>
           </div>
         </div>
         <div class="row gap-8" style="align-items: flex-start; padding-top: 10px; border-top: var(--bd-soft);">
-          <span class="badge amber" style="min-width: 54px; justify-content: center;">RAIN</span>
+          <span class="badge amber" style="min-width: 54px; justify-content: center;"><app-bi k="rain"></app-bi></span>
           <div>
-            <b>Monsoon rainguarding starts 10 June</b>
-            <div class="muted">Apply rainguard polythene strips before south-west monsoon. Field supervisor will instruct.</div>
+            <b><app-bi k="notice3_title"></app-bi></b>
+            <div class="muted"><app-bi k="notice3_desc"></app-bi></div>
           </div>
         </div>
       </div>
@@ -176,10 +177,10 @@ export class DashWorkerComponent {
 
   get actions() {
     return [
-      {l:'View payslip', s:'EN · ML · Mobile', i:'Print', r:'payslip'},
-      {l:'Apply for leave', s:'CL · EL · Sick', i:'Calendar', r:'#'},
-      {l:'Co-op society', s:'Balance ₹4,200', i:'Wallet', r:'#'},
-      {l:'My bank details', s:`A/c ${this.p.emp.acct}`, i:'Lock', r:'#'},
+      {l:'view_payslip_card', s:'en_ml_mobile', i:'Print', r:'payslip'},
+      {l:'apply_leave', s:'cl_el_sick', i:'Calendar', r:'#'},
+      {l:'coop_society', s:'coop_bal_rs', i:'Wallet', r:'#'},
+      {l:'my_bank_details', s:'acct', i:'Lock', r:'#'},
     ];
   }
 }

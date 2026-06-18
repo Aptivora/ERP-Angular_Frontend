@@ -3,31 +3,32 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { DataService } from '../../../core/services/data.service';
+import { BiComponent } from '../../../shared/components/bi/bi.component';
 
 @Component({
   selector: 'app-dps-b',
   standalone: true,
-  imports: [CommonModule, FormsModule, IconComponent],
+  imports: [CommonModule, FormsModule, IconComponent, BiComponent],
   template: `
     <div class="row mb-16 gap-16">
-      <div class="field"><label>Date</label><input class="input mono" [value]="'25-05-2026'" readonly style="width: 130px;"/></div>
+      <div class="field"><label><app-bi k="date"></app-bi></label><input class="input mono" [value]="'25-05-2026'" readonly style="width: 130px;"/></div>
       <div class="field">
-        <label>Block</label>
+        <label><app-bi k="block"></app-bi></label>
         <select class="select" [ngModel]="block()" (ngModelChange)="block.set($event)">
-          <option>KLP-B07 · Kallarkutty B7</option>
-          <option>KLP-B08 · Kallarkutty B8</option>
-          <option>KLP-B12 · Aryankavu A</option>
+          <option>KLP-B07 A Kallarkutty B7</option>
+          <option>KLP-B08 A Kallarkutty B8</option>
+          <option>KLP-B12 A Aryankavu A</option>
         </select>
       </div>
       <div class="field">
-        <label>View</label>
+        <label><app-bi k="view"></app-bi></label>
         <div class="lang-toggle" style="padding: 0;">
-          <button [class.on]="view === 'Card'" (click)="view = 'Card'">Card</button>
-          <button [class.on]="view === 'Table'" (click)="view = 'Table'">Table</button>
+          <button [class.on]="view === 'Card'" (click)="view = 'Card'"><app-bi k="card"></app-bi></button>
+          <button [class.on]="view === 'Table'" (click)="view = 'Table'"><app-bi k="table"></app-bi></button>
         </div>
       </div>
       <div style="margin-left: auto;" class="row gap-8 mt-16">
-        <button class="btn primary sm" (click)="addEntry()"><app-icon name="Plus" [size]="13"></app-icon>Add entry</button>
+        <button class="btn primary sm" (click)="addEntry()"><app-icon name="Plus" [size]="13"></app-icon><app-bi k="add_entry"></app-bi></button>
       </div>
     </div>
 
@@ -45,18 +46,18 @@ import { DataService } from '../../../core/services/data.service';
           </div>
           <div class="card-body" style="padding: 12px 16px;">
             <div class="grid g-2" style="gap: 8px; font-size: 12px;">
-              <div class="col" style="gap: 2px;"><span class="muted up" style="font-size: 10px;">Trees</span><b class="mono" style="font-size: 18px;">{{ r.trees }}</b></div>
-              <div class="col" style="gap: 2px;"><span class="muted up" style="font-size: 10px;">Cups</span><b class="mono" style="font-size: 18px;">{{ r.cups }}</b></div>
-              <div class="col" style="gap: 2px;"><span class="muted up" style="font-size: 10px;">Wt (kg)</span><b class="mono" style="font-size: 18px;">{{ r.latex }}</b></div>
-              <div class="col" style="gap: 2px;"><span class="muted up" style="font-size: 10px;">DRC %</span><b class="mono" style="font-size: 18px;">{{ r.drc }}</b></div>
+              <div class="col" style="gap: 2px;"><span class="muted up" style="font-size: 10px;"><app-bi k="trees_tapped"></app-bi></span><b class="mono" style="font-size: 18px;">{{ r.trees }}</b></div>
+              <div class="col" style="gap: 2px;"><span class="muted up" style="font-size: 10px;"><app-bi k="cups_recovered"></app-bi></span><b class="mono" style="font-size: 18px;">{{ r.cups }}</b></div>
+              <div class="col" style="gap: 2px;"><span class="muted up" style="font-size: 10px;"><app-bi k="wt_kg"></app-bi></span><b class="mono" style="font-size: 18px;">{{ r.latex }}</b></div>
+              <div class="col" style="gap: 2px;"><span class="muted up" style="font-size: 10px;"><app-bi k="drc_pct"></app-bi></span><b class="mono" style="font-size: 18px;">{{ r.drc }}</b></div>
             </div>
             <div class="mt-16" style="padding: 10px; background: var(--bg-2); border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
               <div>
-                <div class="muted" style="font-size: 10px;">DRY KG · INCENTIVE</div>
+                <div class="muted" style="font-size: 10px;"><app-bi k="dry_kg_inc"></app-bi></div>
                 <div class="mono" style="font-size: 22px; font-weight: 700;">{{ getDry(r) }}</div>
               </div>
               <div style="text-align: right;">
-                <div class="muted" style="font-size: 10px;">Δ BASE</div>
+                <div class="muted" style="font-size: 10px;"><app-bi k="base"></app-bi></div>
                 <div class="mono" style="font-size: 18px; font-weight: 700;" [style.color]="getDelta(r) >= 0 ? 'var(--leaf)' : 'var(--oxide)'">
                   {{ getDelta(r) >= 0 ? '+' : '' }}{{ getDelta(r) }}%
                 </div>
@@ -65,9 +66,9 @@ import { DataService } from '../../../core/services/data.service';
           </div>
           <div class="card-foot">
             @if (r.status === 'verified') {
-              <span class="badge leaf"><app-icon name="Check" [size]="10"></app-icon> Verified by V. Raj</span>
+              <span class="badge leaf"><app-icon name="Check" [size]="10"></app-icon> <app-bi k="verified_by"></app-bi></span>
             } @else {
-              <span class="badge amber">Awaiting verification</span>
+              <span class="badge amber"><app-bi k="awaiting_ver"></app-bi></span>
             }
             <button class="btn ghost sm" style="margin-left: auto;" (click)="onAction('Editing entry for ' + r.name + ' (' + r.emp + ')')"><app-icon name="Edit" [size]="12"></app-icon></button>
           </div>
@@ -80,16 +81,16 @@ import { DataService } from '../../../core/services/data.service';
           <thead>
             <tr>
               <th style="width: 32px;">#</th>
-              <th>Tapper</th>
-              <th class="num">Trees</th>
-              <th class="num">Cups</th>
-              <th class="num">Latex (L)</th>
-              <th class="num">Wt (kg)</th>
-              <th class="num">Scrap</th>
-              <th class="num">DRC %</th>
-              <th class="num">Dry kg</th>
-              <th class="num">Δ Base</th>
-              <th>Status</th>
+              <th><app-bi k="tapper"></app-bi></th>
+              <th class="num"><app-bi k="trees_tapped"></app-bi></th>
+              <th class="num"><app-bi k="cups_recovered"></app-bi></th>
+              <th class="num"><app-bi k="latex_l"></app-bi></th>
+              <th class="num"><app-bi k="wt_kg"></app-bi></th>
+              <th class="num"><app-bi k="scrap_kg"></app-bi></th>
+              <th class="num"><app-bi k="drc_pct"></app-bi></th>
+              <th class="num"><app-bi k="dry_kg"></app-bi></th>
+              <th class="num"><app-bi k="base"></app-bi></th>
+              <th><app-bi k="status"></app-bi></th>
             </tr>
           </thead>
           <tbody>

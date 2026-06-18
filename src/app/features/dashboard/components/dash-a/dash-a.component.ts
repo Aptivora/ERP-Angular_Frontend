@@ -5,11 +5,12 @@ import { BarChartComponent } from '../../../../shared/components/charts/bar-char
 import { DonutComponent } from '../../../../shared/components/charts/donut.component';
 import { DataService } from '../../../../core/services/data.service';
 import { RouterModule } from '@angular/router';
+import { BiComponent } from '../../../../shared/components/bi/bi.component';
 
 @Component({
   selector: 'app-dash-a',
   standalone: true,
-  imports: [CommonModule, RouterModule, KpiRowComponent, BarChartComponent, DonutComponent],
+  imports: [CommonModule, RouterModule, KpiRowComponent, BarChartComponent, DonutComponent, BiComponent],
   template: `
     <app-kpi-row [accent]="true"></app-kpi-row>
 
@@ -17,13 +18,13 @@ import { RouterModule } from '@angular/router';
       <div class="card bold">
         <div class="card-head">
           <div>
-            <div class="ttl">Estate production · last 7 days</div>
-            <div class="sub">Latex (dry kg) + Scrap rubber. Dashed line = base yield 8,200 kg.</div>
+            <div class="ttl"><app-bi k="estate_production"></app-bi></div>
+            <div class="sub"><app-bi k="estate_sub"></app-bi></div>
           </div>
           <div style="margin-left: auto;" class="row gap-8">
-            <span class="chip"><span class="dot" style="background: var(--accent);"></span> Latex</span>
-            <span class="chip"><span class="dot" style="background: var(--ink-3);"></span> Scrap</span>
-            <span class="chip"><span class="dot" style="background: var(--oxide);"></span> Base</span>
+            <span class="chip"><span class="dot" style="background: var(--accent);"></span> <app-bi k="latex"></app-bi></span>
+            <span class="chip"><span class="dot" style="background: var(--ink-3);"></span> <app-bi k="scrap"></app-bi></span>
+            <span class="chip"><span class="dot" style="background: var(--oxide);"></span> <app-bi k="base"></app-bi></span>
           </div>
         </div>
         <div class="card-body">
@@ -33,8 +34,8 @@ import { RouterModule } from '@angular/router';
 
       <div class="card bold">
         <div class="card-head">
-          <div class="ttl">Today by cycle</div>
-          <span class="badge clay" style="margin-left: auto;">D4 in progress</span>
+          <div class="ttl"><app-bi k="today_by_cycle"></app-bi></div>
+          <span class="badge clay" style="margin-left: auto;"><app-bi k="d4_in_progress"></app-bi></span>
         </div>
         <div class="card-body row" style="gap: 16px;">
           <app-donut 
@@ -64,18 +65,18 @@ import { RouterModule } from '@angular/router';
     <div class="grid g-2 mb-16">
       <div class="card bold">
         <div class="card-head">
-          <div class="ttl">Tappers needing attention</div>
-          <button class="btn ghost sm" style="margin-left: auto;" routerLink="/workers">View all</button>
+          <div class="ttl"><app-bi k="tappers_attention"></app-bi></div>
+          <button class="btn ghost sm" style="margin-left: auto;" routerLink="/workers"><app-bi k="view_all"></app-bi></button>
         </div>
         <table class="tbl dense">
           <thead>
             <tr>
-              <th>Tapper</th><th>Block</th><th>Issue</th><th class="num">Δ vs base</th>
+              <th><app-bi k="tapper"></app-bi></th><th><app-bi k="block"></app-bi></th><th><app-bi k="issue"></app-bi></th><th class="num"><app-bi k="vs_base"></app-bi></th>
             </tr>
           </thead>
           <tbody>
-            <tr><td><b>Saritha Anand</b><div class="muted" style="font-size: 11px;">EMP-2055</div></td><td><span class="cycle d2">D2</span> KLP-B08</td><td><span class="badge oxide">Low DRC 31.4%</span></td><td class="num hl-oxide">−18%</td></tr>
-            <tr><td><b>Suresh Babu</b><div class="muted" style="font-size: 11px;">EMP-1311</div></td><td><span class="cycle d3">D3</span> KLP-B12</td><td><span class="badge amber">Absent · 3 days</span></td><td class="num hl-oxide">−100%</td></tr>
+            <tr><td><b>Saritha Anand</b><div class="muted" style="font-size: 11px;">EMP-2055</div></td><td><span class="cycle d2">D2</span> KLP-B08</td><td><span class="badge oxide">Low DRC 31.4%</span></td><td class="num hl-oxide">-18%</td></tr>
+            <tr><td><b>Suresh Babu</b><div class="muted" style="font-size: 11px;">EMP-1311</div></td><td><span class="cycle d3">D3</span> KLP-B12</td><td><span class="badge amber">Absent · 3 days</span></td><td class="num hl-oxide">-100%</td></tr>
             <tr><td><b>Anil Kumar</b><div class="muted" style="font-size: 11px;">EMP-1505</div></td><td><span class="cycle d4">D4</span> KLP-B27</td><td><span class="badge amber">DPS pending</span></td><td class="num">—</td></tr>
             <tr><td><b>Vinod Raj</b><div class="muted" style="font-size: 11px;">EMP-1944</div></td><td>Supervisor</td><td><span class="badge clay">9 entries to verify</span></td><td class="num">—</td></tr>
           </tbody>
@@ -84,8 +85,8 @@ import { RouterModule } from '@angular/router';
 
       <div class="card bold">
         <div class="card-head">
-          <div class="ttl">Approvals queue</div>
-          <span class="badge solid" style="margin-left: auto;">14 pending</span>
+          <div class="ttl"><app-bi k="approvals_queue"></app-bi></div>
+          <span class="badge solid" style="margin-left: auto;"><app-bi k="pending_badge"></app-bi></span>
         </div>
         <div class="card-body col" style="gap: 10px;">
           @for (a of approvals; track a.t) {
@@ -96,7 +97,7 @@ import { RouterModule } from '@angular/router';
                 <div class="muted" style="font-size: 11px;">{{ a.who }} · {{ a.time }}</div>
               </div>
               <div class="mono" style="font-weight: 700; font-size: 12px;">{{ a.amt }}</div>
-              <button class="btn primary sm" routerLink="/dps">Review</button>
+              <button class="btn primary sm" routerLink="/dps"><app-bi k="review"></app-bi></button>
             </div>
           }
         </div>

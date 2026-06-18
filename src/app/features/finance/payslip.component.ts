@@ -6,41 +6,45 @@ import { PayslipAComponent } from './components/payslip-a.component';
 import { PayslipBComponent } from './components/payslip-b.component';
 import { PayslipCComponent } from './components/payslip-c.component';
 import { AppConfigService } from '../../core/services/app-config.service';
+import { PdfExportService } from '../../core/services/pdf-export.service';
+import { BiComponent } from '../../shared/components/bi/bi.component';
 
 @Component({
   selector: 'app-payslip',
   standalone: true,
-  imports: [CommonModule, PageHeadComponent, IconComponent, PayslipAComponent, PayslipBComponent, PayslipCComponent],
+  imports: [CommonModule, PageHeadComponent, IconComponent, PayslipAComponent, PayslipBComponent, PayslipCComponent, BiComponent],
   template: `
     <div class="page">
       <app-page-head
         title="Payslip"
         ml="വേതന ചീട്ട്"
-        sub="Rajan Pillai · EMP-1042 · Cycle 21 Apr – 20 May 2026"
       >
+        <div content class="page-sub"><app-bi k="payslip_sub"></app-bi></div>
         <ng-container actions>
-          <button class="btn ghost sm" (click)="onAction('Downloading payslip as PDF...')"><app-icon name="Download" [size]="13"></app-icon>PDF (EN)</button>
-          <button class="btn ghost sm" (click)="onAction('Downloading payslip as PDF (ML)...')"><app-icon name="Download" [size]="13"></app-icon>PDF (ML)</button>
-          <button class="btn ghost sm" (click)="onAction('Downloading payslip as PDF...')"><app-icon name="Download" [size]="13"></app-icon>Download PDF</button>
-          <button class="btn primary sm" (click)="onAction('Sending SMS payslip to +91 98*** **421...')">SMS to worker</button>
+          <button class="btn ghost sm" (click)="downloadPdf('payslip_en')"><app-icon name="Download" [size]="13"></app-icon><app-bi k="pdf_en"></app-bi></button>
+          <button class="btn ghost sm" (click)="downloadPdf('payslip_ml')"><app-icon name="Download" [size]="13"></app-icon><app-bi k="pdf_ml"></app-bi></button>
+          <button class="btn ghost sm" (click)="downloadPdf('payslip')"><app-icon name="Download" [size]="13"></app-icon><app-bi k="download_pdf"></app-bi></button>
+          <button class="btn primary sm" (click)="onAction('Sending SMS payslip to +91 98*** **421...')"><app-bi k="sms_to_worker"></app-bi></button>
         </ng-container>
       </app-page-head>
 
       <div class="mb-16" style="display: flex; gap: 8px; align-items: center;">
-        <span class="muted" style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;">Variant</span>
+        <span class="muted" style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;"><app-bi k="variant"></app-bi></span>
         <div class="lang-toggle">
-          <button [class.on]="variant() === 'A'" (click)="setVariant('A')">Official</button>
-          <button [class.on]="variant() === 'B'" (click)="setVariant('B')">Malayalam</button>
-          <button [class.on]="variant() === 'C'" (click)="setVariant('C')">Mobile/SMS</button>
+          <button [class.on]="variant() === 'A'" (click)="setVariant('A')"><app-bi k="official"></app-bi></button>
+          <button [class.on]="variant() === 'B'" (click)="setVariant('B')"><app-bi k="malayalam"></app-bi></button>
+          <button [class.on]="variant() === 'C'" (click)="setVariant('C')"><app-bi k="mobile_sms"></app-bi></button>
         </div>
       </div>
 
-      @switch (variant()) {
-        @case ('A') { <app-payslip-a lang="both"></app-payslip-a> }
-        @case ('B') { <app-payslip-b></app-payslip-b> }
-        @case ('C') { <app-payslip-c></app-payslip-c> }
-        @default { <app-payslip-a lang="both"></app-payslip-a> }
-      }
+      <div id="payslip-export-content">
+        @switch (variant()) {
+          @case ('A') { <app-payslip-a [lang]="config.lang()"></app-payslip-a> }
+          @case ('B') { <app-payslip-b></app-payslip-b> }
+          @case ('C') { <app-payslip-c></app-payslip-c> }
+          @default { <app-payslip-a [lang]="config.lang()"></app-payslip-a> }
+        }
+      </div>
     </div>
 
     <!-- Toast Notification -->
@@ -53,7 +57,8 @@ import { AppConfigService } from '../../core/services/app-config.service';
   `
 })
 export class PayslipComponent {
-  private config = inject(AppConfigService);
+  public config = inject(AppConfigService);
+  private pdfService = inject(PdfExportService);
   
   // Reuse dashboard variant for payslip variant mapping (A, B, C)
   // This matches window.setPayslipVariant behavior in React, 
@@ -72,5 +77,10 @@ export class PayslipComponent {
 
   onAction(msg: string) {
     this.showToast(msg);
+  }
+
+  downloadPdf(name: string) {
+    this.showToast('Generating PDF...');
+    this.pdfService.exportElementToPdf('payslip-export-content', name + '.pdf');
   }
 }

@@ -11,6 +11,7 @@ import { DashAdminComponent } from './components/dash-admin/dash-admin.component
 import { DashAuditorComponent } from './components/dash-auditor/dash-auditor.component';
 import { DashWorkerComponent } from './components/dash-worker/dash-worker.component';
 import { DashCcWorkerComponent } from './components/dash-cc-worker/dash-cc-worker.component';
+import { BiComponent } from '../../shared/components/bi/bi.component';
 
 @Component({
   selector: 'app-role-dashboard',
@@ -24,7 +25,8 @@ import { DashCcWorkerComponent } from './components/dash-cc-worker/dash-cc-worke
     DashAdminComponent,
     DashAuditorComponent,
     DashWorkerComponent,
-    DashCcWorkerComponent
+    DashCcWorkerComponent,
+    BiComponent
   ],
   template: `
     @switch (dashView) {
@@ -45,9 +47,9 @@ import { DashCcWorkerComponent } from './components/dash-cc-worker/dash-cc-worke
             [sub]="role().name + ' · ' + role().title + ' · ' + role().scope"
           >
             <ng-container actions>
-              <button class="btn ghost sm" (click)="config.toggleTweaks()"><app-icon name="Settings" [size]="13"></app-icon>Tweaks</button>
-              <button class="btn ghost sm"><app-icon name="Refresh" [size]="13"></app-icon>Refresh</button>
-              <button class="btn primary sm" (click)="saveChanges()"><app-icon name="Check" [size]="13"></app-icon>Save Changes</button>
+              <button class="btn ghost sm" (click)="config.toggleTweaks()"><app-icon name="Settings" [size]="13"></app-icon><app-bi k="tweaks"></app-bi></button>
+              <button class="btn ghost sm"><app-icon name="Refresh" [size]="13"></app-icon><app-bi k="refresh"></app-bi></button>
+              <button class="btn primary sm" (click)="saveChanges()"><app-icon name="Check" [size]="13"></app-icon><app-bi k="save_changes"></app-bi></button>
             </ng-container>
           </app-page-head>
           <app-dash-supervisor [role]="role()"></app-dash-supervisor>
@@ -61,10 +63,10 @@ import { DashCcWorkerComponent } from './components/dash-cc-worker/dash-cc-worke
             sub="Service health · users · integrations · audit"
           >
             <ng-container actions>
-              <button class="btn ghost sm" (click)="config.toggleTweaks()"><app-icon name="Settings" [size]="13"></app-icon>Tweaks</button>
-              <button class="btn ghost sm"><app-icon name="Refresh" [size]="13"></app-icon>Refresh</button>
-              <a href="#settings" class="btn ghost sm">Open settings</a>
-              <button class="btn primary sm" (click)="saveChanges()"><app-icon name="Check" [size]="13"></app-icon>Save Changes</button>
+              <button class="btn ghost sm" (click)="config.toggleTweaks()"><app-icon name="Settings" [size]="13"></app-icon><app-bi k="tweaks"></app-bi></button>
+              <button class="btn ghost sm"><app-icon name="Refresh" [size]="13"></app-icon><app-bi k="refresh"></app-bi></button>
+              <a href="#settings" class="btn ghost sm"><app-bi k="open_settings"></app-bi></a>
+              <button class="btn primary sm" (click)="saveChanges()"><app-icon name="Check" [size]="13"></app-icon><app-bi k="save_changes"></app-bi></button>
             </ng-container>
           </app-page-head>
           <app-dash-admin></app-dash-admin>
@@ -78,10 +80,10 @@ import { DashCcWorkerComponent } from './components/dash-cc-worker/dash-cc-worke
             [sub]="'Engagement SFCK/AUD/26-27/04 · ' + role().name"
           >
             <ng-container actions>
-              <button class="btn ghost sm" (click)="config.toggleTweaks()"><app-icon name="Settings" [size]="13"></app-icon>Tweaks</button>
-              <button class="btn ghost sm"><app-icon name="Download" [size]="13"></app-icon>Export findings</button>
-              <button class="btn ghost sm"><app-icon name="Plus" [size]="13"></app-icon>Raise finding</button>
-              <button class="btn primary sm" (click)="saveChanges()"><app-icon name="Check" [size]="13"></app-icon>Save Changes</button>
+              <button class="btn ghost sm" (click)="config.toggleTweaks()"><app-icon name="Settings" [size]="13"></app-icon><app-bi k="tweaks"></app-bi></button>
+              <button class="btn ghost sm"><app-icon name="Download" [size]="13"></app-icon><app-bi k="export_findings"></app-bi></button>
+              <button class="btn ghost sm"><app-icon name="Plus" [size]="13"></app-icon><app-bi k="raise_finding"></app-bi></button>
+              <button class="btn primary sm" (click)="saveChanges()"><app-icon name="Check" [size]="13"></app-icon><app-bi k="save_changes"></app-bi></button>
             </ng-container>
           </app-page-head>
           <app-dash-auditor></app-dash-auditor>
@@ -95,9 +97,9 @@ import { DashCcWorkerComponent } from './components/dash-cc-worker/dash-cc-worke
             [sub]="role().name + ' · ' + role().title + ' · ' + role().empId + ' · ' + (role().block || role().scope)"
           >
             <ng-container actions>
-              <button class="btn ghost sm" (click)="config.toggleTweaks()"><app-icon name="Settings" [size]="13"></app-icon>Tweaks</button>
-              <a href="#payslip" class="btn ghost sm"><app-icon name="Download" [size]="13"></app-icon>Payslip</a>
-              <button class="btn primary sm" (click)="saveChanges()"><app-icon name="Check" [size]="13"></app-icon>Save Changes</button>
+              <button class="btn ghost sm" (click)="config.toggleTweaks()"><app-icon name="Settings" [size]="13"></app-icon><app-bi k="tweaks"></app-bi></button>
+              <a href="#payslip" class="btn ghost sm"><app-icon name="Download" [size]="13"></app-icon><app-bi k="payslip"></app-bi></a>
+              <button class="btn primary sm" (click)="saveChanges()"><app-icon name="Check" [size]="13"></app-icon><app-bi k="save_changes"></app-bi></button>
             </ng-container>
           </app-page-head>
           <app-dash-worker [role]="role()"></app-dash-worker>
@@ -111,10 +113,10 @@ import { DashCcWorkerComponent } from './components/dash-cc-worker/dash-cc-worke
             [sub]="role().name + ' · ' + role().title"
           >
             <ng-container actions>
-              <button class="btn ghost sm" (click)="config.toggleTweaks()"><app-icon name="Settings" [size]="13"></app-icon>Tweaks</button>
-              <button class="btn ghost sm"><app-icon name="Refresh" [size]="13"></app-icon>Refresh</button>
-              <a href="#collection" class="btn ghost sm"><app-icon name="Plus" [size]="13"></app-icon>New intake</a>
-              <button class="btn primary sm" (click)="saveChanges()"><app-icon name="Check" [size]="13"></app-icon>Save Changes</button>
+              <button class="btn ghost sm" (click)="config.toggleTweaks()"><app-icon name="Settings" [size]="13"></app-icon><app-bi k="tweaks"></app-bi></button>
+              <button class="btn ghost sm"><app-icon name="Refresh" [size]="13"></app-icon><app-bi k="refresh"></app-bi></button>
+              <a href="#collection" class="btn ghost sm"><app-icon name="Plus" [size]="13"></app-icon><app-bi k="new_intake"></app-bi></a>
+              <button class="btn primary sm" (click)="saveChanges()"><app-icon name="Check" [size]="13"></app-icon><app-bi k="save_changes"></app-bi></button>
             </ng-container>
           </app-page-head>
           <app-dash-cc-worker [role]="role()"></app-dash-cc-worker>

@@ -2,33 +2,34 @@ import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IconComponent } from '../../../../shared/components/icon/icon.component';
 import { Role } from '../../../../core/services/roles.service';
+import { BiComponent } from '../../../../shared/components/bi/bi.component';
 
 @Component({
   selector: 'app-dash-supervisor',
   standalone: true,
-  imports: [CommonModule, IconComponent],
+  imports: [CommonModule, IconComponent, BiComponent],
   template: `
     <div class="card bold mb-16" style="background: var(--ink); color: var(--bg); border: none;">
       <div class="card-body row" style="padding: 24px; gap: 24px; align-items: center;">
         <div class="avatar" style="width: 56px; height: 56px; font-size: 18px; background: var(--accent);">{{ role?.avatar }}</div>
         <div style="flex: 1;">
-          <div style="font-size: 11px; color: var(--bg-3); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700;">Good morning · ശുഭദിനം</div>
+          <div style="font-size: 11px; color: var(--bg-3); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700;"><app-bi k="good_morning"></app-bi></div>
           <div style="font-size: 24px; font-weight: 800; margin-top: 2px;">{{ role?.name }} · {{ role?.title }}</div>
           <div style="font-size: 13px; color: var(--bg-3); margin-top: 2px;">
-            {{ isTapping ? '18 blocks · D1 cycle today · 412 tappers in rotation' : '3 blocks · D1 cycle today · 38 tappers under you' }}
+            <app-bi [k]="isTapping ? 'blocks_18_msg' : 'blocks_3_msg'"></app-bi>
           </div>
         </div>
         <div class="grid g-3" style="gap: 24px;">
           <div>
-            <div style="font-size: 10px; color: var(--bg-3); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;">Tappers · today</div>
+            <div style="font-size: 10px; color: var(--bg-3); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;"><app-bi k="tappers_today"></app-bi></div>
             <div class="mono" style="font-size: 26px; font-weight: 800;">{{ isTapping ? '404/412' : '36/38' }}</div>
           </div>
           <div>
-            <div style="font-size: 10px; color: var(--bg-3); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;">Latex collected</div>
-            <div class="mono" style="font-size: 26px; font-weight: 800;">{{ isTapping ? '9,420' : '284' }}<span style="font-size: 14px; color: var(--bg-3);"> kg</span></div>
+            <div style="font-size: 10px; color: var(--bg-3); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;"><app-bi k="latex_collected"></app-bi></div>
+            <div class="mono" style="font-size: 26px; font-weight: 800;">{{ isTapping ? '9,420' : '284' }}<span style="font-size: 14px; color: var(--bg-3);"> <app-bi k="kg"></app-bi></span></div>
           </div>
           <div>
-            <div style="font-size: 10px; color: var(--bg-3); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;">Pending verify</div>
+            <div style="font-size: 10px; color: var(--bg-3); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;"><app-bi k="pending_verify"></app-bi></div>
             <div class="mono" style="font-size: 26px; font-weight: 800; color: var(--accent-hi);">{{ isTapping ? '24' : '9' }}</div>
           </div>
         </div>
@@ -43,8 +44,8 @@ import { Role } from '../../../../core/services/roles.service';
               <app-icon [name]="a.i" [size]="22"></app-icon>
             </div>
             <div>
-              <div style="font-weight: 700; font-size: 14px;">{{ a.l }}</div>
-              <div class="muted" style="font-size: 11px;">{{ a.s }}</div>
+              <div style="font-weight: 700; font-size: 14px;"><app-bi [k]="a.l"></app-bi></div>
+              <div class="muted" style="font-size: 11px;"><app-bi [k]="a.s"></app-bi></div>
             </div>
             <app-icon name="ChevronR" [size]="16" style="margin-left: auto; color: var(--ink-3);"></app-icon>
           </div>
@@ -54,12 +55,12 @@ import { Role } from '../../../../core/services/roles.service';
 
     <div class="grid mb-16" style="grid-template-columns: 1.4fr 1fr;">
       <div class="card bold">
-        <div class="card-head"><div class="ttl">My blocks · today (D1 cycle)</div></div>
+        <div class="card-head"><div class="ttl"><app-bi k="my_blocks_today_d1"></app-bi></div></div>
         <table class="tbl">
           <thead>
             <tr>
-              <th>Block</th><th class="num">Tappers</th><th class="num">Present</th>
-              <th class="num">Latex kg</th><th class="num">Avg DRC</th><th>Status</th><th></th>
+              <th><app-bi k="block"></app-bi></th><th class="num"><app-bi k="tappers"></app-bi></th><th class="num"><app-bi k="present"></app-bi></th>
+              <th class="num"><app-bi k="latex_wt_lbl"></app-bi></th><th class="num"><app-bi k="avg_drc"></app-bi></th><th><app-bi k="status"></app-bi></th><th></th>
             </tr>
           </thead>
           <tbody>
@@ -70,8 +71,8 @@ import { Role } from '../../../../core/services/roles.service';
                 <td class="num"><b>{{ r.pr }}/{{ r.tp }}</b></td>
                 <td class="num mono">{{ r.kg }}</td>
                 <td class="num">{{ r.drc }}%</td>
-                <td><span class="badge" [ngClass]="r.st">{{ r.sl }}</span></td>
-                <td><a href="#dps" class="btn ghost sm">Open DPS</a></td>
+                <td><span class="badge" [ngClass]="r.st"><app-bi [k]="r.sl"></app-bi></span></td>
+                <td><a href="#dps" class="btn ghost sm"><app-bi k="open_dps"></app-bi></a></td>
               </tr>
             }
           </tbody>
@@ -79,16 +80,16 @@ import { Role } from '../../../../core/services/roles.service';
       </div>
 
       <div class="card bold">
-        <div class="card-head"><div class="ttl">To-do · 4 items</div></div>
+        <div class="card-head"><div class="ttl"><app-bi k="todo_4_items"></app-bi></div></div>
         <div class="card-body col" style="gap: 14px;">
           @for (r of todoList; track r.t) {
             <div class="row gap-8" style="align-items: flex-start;">
               <span class="dot" [ngClass]="r.col" style="margin-top: 6px;"></span>
               <div style="flex: 1;">
-                <div style="font-weight: 600; font-size: 13px;">{{ r.t }}</div>
-                <div class="muted" style="font-size: 11px;">{{ r.s }}</div>
+                <div style="font-weight: 600; font-size: 13px;"><app-bi [k]="r.t"></app-bi></div>
+                <div class="muted" style="font-size: 11px;"><app-bi [k]="r.s"></app-bi></div>
               </div>
-              <a [href]="'#' + r.route" class="btn ghost sm">Open</a>
+              <a [href]="'#' + r.route" class="btn ghost sm"><app-bi k="open"></app-bi></a>
             </div>
           }
         </div>
@@ -104,22 +105,22 @@ export class DashSupervisorComponent {
   }
 
   quickActions = [
-    {l:'Open muster', s:'KLP-B07 · D1', i:'Clock',     r:'attendance', color:'leaf'},
-    {l:'Add DPS entry', s:'9 pending verification', i:'Droplet', r:'dps', color:'clay'},
-    {l:'Record intake', s:'CC-Main · 6 batches due', i:'Truck', r:'collection', color:'leaf'},
-    {l:'Issue ammonia', s:'2 blocks awaiting', i:'Boxes', r:'inventory', color:'amber'},
+    {l:'open_muster', s:'klp_b07_d1', i:'Clock',     r:'attendance', color:'leaf'},
+    {l:'add_dps_entry', s:'pending_verification_9', i:'Droplet', r:'dps', color:'clay'},
+    {l:'record_intake', s:'cc_main_6_batches', i:'Truck', r:'collection', color:'leaf'},
+    {l:'issue_ammonia', s:'blocks_awaiting_2', i:'Boxes', r:'inventory', color:'amber'},
   ];
 
   myBlocks = [
-    {b:'KLP-B07 Kallarkutty B7',  tp:12, pr:11, kg:126, drc:33.8, st:'leaf', sl:'On track'},
-    {b:'KLP-B08 Kallarkutty B8',  tp:10, pr: 9, kg: 86, drc:32.4, st:'amber', sl:'DRC low'},
-    {b:'KLP-B12 Aryankavu A',     tp:16, pr:16, kg:108, drc:33.5, st:'leaf', sl:'On track'},
+    {b:'KLP-B07 Kallarkutty B7',  tp:12, pr:11, kg:126, drc:33.8, st:'leaf', sl:'on_track'},
+    {b:'KLP-B08 Kallarkutty B8',  tp:10, pr: 9, kg: 86, drc:32.4, st:'amber', sl:'drc_low'},
+    {b:'KLP-B12 Aryankavu A',     tp:16, pr:16, kg:108, drc:33.5, st:'leaf', sl:'on_track'},
   ];
 
   todoList = [
-    {t:'Verify 9 DPS entries', s:'Submitted by V. Raj · 09:32', col:'amber', route:'dps'},
-    {t:'Mark Suresh Babu absent (3rd day)', s:'Auto-escalate to Field Officer', col:'oxide', route:'attendance'},
-    {t:'Sample retest · Saritha Anand', s:'DRC 31.4% flagged at CC', col:'oxide', route:'collection'},
-    {t:'Submit Estimate EST-1042', s:'+12 mandays · clearing B19', col:'clay', route:'mazdoor'},
+    {t:'verify_9_dps', s:'submitted_by_v_raj', col:'amber', route:'dps'},
+    {t:'mark_suresh_absent', s:'auto_escalate_field_officer', col:'oxide', route:'attendance'},
+    {t:'sample_retest_saritha', s:'drc_flagged_cc', col:'oxide', route:'collection'},
+    {t:'submit_estimate_est', s:'plus_12_mandays', col:'clay', route:'mazdoor'},
   ];
 }

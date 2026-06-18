@@ -1,36 +1,41 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PageHeadComponent } from '../../shared/components/page-head/page-head.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
+import { PdfExportService } from '../../core/services/pdf-export.service';
+import { BiComponent } from '../../shared/components/bi/bi.component';
 
 @Component({
   selector: 'app-mazdoor',
   standalone: true,
-  imports: [CommonModule, FormsModule, PageHeadComponent, IconComponent],
+  imports: [CommonModule, FormsModule, PageHeadComponent, IconComponent, BiComponent],
   template: `
-    <div class="page">
+    <div class="page" id="mazdoor-export-content">
       <app-page-head
         title="Mazdoor Estimate"
         ml="മസ്ദൂർ എസ്റ്റിമേറ്റ്"
-        sub="Non-tapping task budgeting · authorisations · live consumption"
+        [sub]="''"
       >
+        <ng-container content>
+          <div class="muted mt-4" style="font-size: 13px;"><app-bi k="mzd_sub"></app-bi></div>
+        </ng-container>
         <ng-container actions>
-          <button class="btn ghost sm" (click)="onAction('Exporting Mazdoor estimates as PDF…')"><app-icon name="Download" [size]="13"></app-icon>Export</button>
-          <button class="btn primary sm" (click)="onAction('+ New Estimate: Fill in task, block, mandays, day rate, and submit for approval.')"><app-icon name="Plus" [size]="13"></app-icon>New estimate</button>
+          <button class="btn ghost sm" (click)="downloadPdf('mazdoor_estimate')"><app-icon name="Download" [size]="13"></app-icon><app-bi k="export_pdf"></app-bi></button>
+          <button class="btn primary sm" (click)="onAction('+ New Estimate: Fill in task, block, mandays, day rate, and submit for approval.')"><app-icon name="Plus" [size]="13"></app-icon><app-bi k="new_estimate"></app-bi></button>
         </ng-container>
       </app-page-head>
 
       <div class="grid g-4 mb-16">
-        <div class="kpi"><div class="label">Open estimates</div><div class="value">23</div><div class="delta">across 18 blocks</div></div>
-        <div class="kpi"><div class="label">Sanctioned budget</div><div class="value">₹14.2<span class="unit">lakh</span></div><div class="delta">FY26 Q1 · MD approved</div></div>
-        <div class="kpi"><div class="label">Consumed</div><div class="value">₹8.7<span class="unit">lakh</span></div><div class="delta">61% of sanction</div></div>
-        <div class="kpi"><div class="label">Pending approval</div><div class="value">5</div><div class="delta">3 from Estate Manager · 2 GM</div></div>
+        <div class="kpi"><div class="label"><app-bi k="open_estimates"></app-bi></div><div class="value">23</div><div class="delta">across 18 blocks</div></div>
+        <div class="kpi"><div class="label"><app-bi k="sanctioned_budget"></app-bi></div><div class="value">₹14.2<span class="unit">lakh</span></div><div class="delta">FY26 Q1 · MD approved</div></div>
+        <div class="kpi"><div class="label"><app-bi k="consumed"></app-bi></div><div class="value">₹8.7<span class="unit">lakh</span></div><div class="delta">61% of sanction</div></div>
+        <div class="kpi"><div class="label"><app-bi k="pending_approval"></app-bi></div><div class="value">5</div><div class="delta">3 from Estate Manager · 2 GM</div></div>
       </div>
 
       <div class="card bold mb-16">
         <div class="card-head">
-          <div class="ttl">Active estimates · Kulathupuzha</div>
+          <div class="ttl"><app-bi k="active_estimates"></app-bi> · Kulathupuzha</div>
           <div class="row gap-8" style="margin-left: auto; font-size: 11px;">
             <span class="chip"><span class="dot leaf"></span>Under budget</span>
             <span class="chip"><span class="dot amber"></span>Approaching limit</span>
@@ -40,8 +45,8 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
         <table class="tbl">
           <thead>
             <tr>
-              <th>Est. No.</th><th>Task</th><th>Block</th><th class="num">Mandays sanctioned</th>
-              <th class="num">Used</th><th>Burn</th><th class="num">Budget</th><th>Supervisor</th><th>Status</th>
+              <th><app-bi k="est_no"></app-bi></th><th><app-bi k="task"></app-bi></th><th><app-bi k="block"></app-bi></th><th class="num"><app-bi k="mandays"></app-bi></th>
+              <th class="num"><app-bi k="used"></app-bi></th><th><app-bi k="burn"></app-bi></th><th class="num"><app-bi k="budget"></app-bi></th><th><app-bi k="manager"></app-bi></th><th><app-bi k="status"></app-bi></th>
             </tr>
           </thead>
           <tbody>
@@ -69,10 +74,10 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
 
       <div class="grid g-2">
         <div class="card bold">
-          <div class="card-head"><div class="ttl">Create new estimate</div></div>
+          <div class="card-head"><div class="ttl"><app-bi k="create_estimate"></app-bi></div></div>
           <div class="card-body grid g-2" style="gap: 14px;">
             <div class="field">
-              <label>Task</label>
+              <label><app-bi k="task"></app-bi></label>
               <select class="select" [(ngModel)]="mzdTask">
                 <option>— Select task —</option>
                 <option>Block clearing & weeding</option>
@@ -83,7 +88,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
               </select>
             </div>
             <div class="field">
-              <label>Block</label>
+              <label><app-bi k="block"></app-bi></label>
               <select class="select" [(ngModel)]="mzdBlock">
                 <option>KLP-B07 Kallarkutty B7</option>
                 <option>KLP-B08 Kallarkutty B8</option>
@@ -91,11 +96,11 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
                 <option>KLP-B19 Vilakkupara V2</option>
               </select>
             </div>
-            <div class="field"><label>Mandays</label><input class="input mono" [value]="'60'" /></div>
-            <div class="field"><label>Day rate</label><input class="input mono" [value]="'380'" /></div>
-            <div class="field"><label>Estimated cost</label><input class="input mono" [value]="'₹22,800'" readonly /></div>
-            <div class="field"><label>Start date</label><input class="input mono" [value]="'01-06-2026'" /></div>
-            <div class="field" style="grid-column: span 2;"><label>Notes</label><textarea class="textarea" rows="2" placeholder="Justification…"></textarea></div>
+            <div class="field"><label><app-bi k="mandays"></app-bi></label><input class="input mono" [value]="'60'" /></div>
+            <div class="field"><label><app-bi k="day_rate_mzd"></app-bi></label><input class="input mono" [value]="'380'" /></div>
+            <div class="field"><label><app-bi k="est_cost"></app-bi></label><input class="input mono" [value]="'₹22,800'" readonly /></div>
+            <div class="field"><label><app-bi k="start_date"></app-bi></label><input class="input mono" [value]="'01-06-2026'" /></div>
+            <div class="field" style="grid-column: span 2;"><label><app-bi k="notes"></app-bi></label><textarea class="textarea" rows="2" placeholder="Justification…"></textarea></div>
             <div class="row gap-8" style="grid-column: span 2;">
               <button class="btn ghost" (click)="onAction('Draft saved for task: ' + mzdTask + ' at block ' + mzdBlock)">Save draft</button>
               <button class="btn primary" style="margin-left: auto;" (click)="onAction('Estimate submitted for approval.\\nTask: ' + mzdTask + '\\nBlock: ' + mzdBlock + '\\nRouted to: Estate Manager (P. Suresh Kumar)')">Submit for approval</button>
@@ -131,6 +136,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
   `
 })
 export class MazdoorComponent {
+  private pdfService = inject(PdfExportService);
   mzdTask = '— Select task —';
   mzdBlock = 'KLP-B07 Kallarkutty B7';
 
@@ -157,5 +163,9 @@ export class MazdoorComponent {
 
   onAction(msg: string) {
     alert(msg);
+  }
+
+  downloadPdf(name: string) {
+    this.pdfService.exportElementToPdf('mazdoor-export-content', name + '.pdf');
   }
 }

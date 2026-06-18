@@ -1,21 +1,22 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { KpiRowComponent } from '../kpi-row/kpi-row.component';
+import { BiComponent } from '../../../../shared/components/bi/bi.component';
 
 @Component({
   selector: 'app-dash-b',
   standalone: true,
-  imports: [CommonModule, KpiRowComponent],
+  imports: [CommonModule, KpiRowComponent, BiComponent],
   template: `
     <app-kpi-row [accent]="false"></app-kpi-row>
     <div class="grid mb-16" style="grid-template-columns: 2fr 1fr;">
       <div class="card bold" style="min-height: 420px;">
         <div class="card-head">
-          <div class="ttl">Kulathupuzha Estate · block map</div>
+          <div class="ttl"><app-bi k="estate_map"></app-bi></div>
           <div class="row gap-8" style="margin-left: auto;">
-            <span class="chip"><span class="dot leaf"></span> Mature</span>
-            <span class="chip"><span class="dot amber"></span> Immature</span>
-            <span class="chip"><span class="dot oxide"></span> CUT/Slaughter</span>
+            <span class="chip"><span class="dot leaf"></span> <app-bi k="mature"></app-bi></span>
+            <span class="chip"><span class="dot amber"></span> <app-bi k="immature"></app-bi></span>
+            <span class="chip"><span class="dot oxide"></span> <app-bi k="cut_slaughter"></app-bi></span>
           </div>
         </div>
         <div class="card-body" style="padding: 0; background: var(--bg-2); position: relative; height: 380px; overflow: hidden;">
@@ -32,7 +33,7 @@ import { KpiRowComponent } from '../kpi-row/kpi-row.component';
             <rect width="800" height="380" fill="url(#grid)"/>
             <!-- river -->
             <path d="M 0 280 Q 200 240 380 290 T 800 250" stroke="#7eb4d1" stroke-width="14" fill="none" opacity="0.5"/>
-            <text x="80" y="276" font-size="9" fill="#3a6478" font-family="var(--font-mono)">KALLADA RIVER</text>
+            <text x="80" y="276" font-size="9" fill="#3a6478" font-family="var(--font-mono)"><app-bi k="kallada_river"></app-bi></text>
             <!-- blocks -->
             @for (b of blocks; track b.label) {
               <g>
@@ -45,13 +46,13 @@ import { KpiRowComponent } from '../kpi-row/kpi-row.component';
               </g>
             }
             <circle cx="380" cy="320" r="9" fill="var(--accent)" stroke="var(--surface)" stroke-width="3"/>
-            <text x="395" y="324" font-size="10" font-weight="700" fill="var(--ink)">Collection Centre · Kulathupuzha Main</text>
+            <text x="395" y="324" font-size="10" font-weight="700" fill="var(--ink)"><app-bi k="cc_main_map"></app-bi></text>
           </svg>
         </div>
       </div>
 
       <div class="card bold">
-        <div class="card-head"><div class="ttl">Live ops feed</div><span class="dot leaf" style="margin-left: auto;"></span></div>
+        <div class="card-head"><div class="ttl"><app-bi k="live_ops_feed"></app-bi></div><span class="dot leaf" style="margin-left: auto;"></span></div>
         <div class="card-body col" style="gap: 12px; font-size: 12px;">
           @for (f of feed; track f.t) {
             <div class="row gap-8" style="align-items: flex-start;">
